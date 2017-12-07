@@ -22,7 +22,7 @@
 
 ### 通过模块 compiler-tools 添加、编译新业务组件
 
-+ 如果有新的自定义业务组件，先编写对应的解析器，参考这里的[文档]()
++ 如果有新的自定义业务组件，先编写对应的解析器，参考这里的[文档](http://tangram.pingguohe.net/docs/android/add-a-custom-element)
 + 添加新的业务组件的模板 XML 到 template 文件夹下；
 + 在 `VirtualViewCompileTool` 的 `RESOURCE_LIST` 添加一条新的记录，有三个参数：
 	+ type：组件名称，是业务开发时定义的；
