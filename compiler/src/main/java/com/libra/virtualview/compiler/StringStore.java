@@ -28,7 +28,6 @@ import com.libra.Log;
 import com.libra.TextUtils;
 import com.libra.expr.common.StringSupport;
 import com.libra.virtualview.common.StringBase;
-import com.sun.tools.javac.util.Assert;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -63,8 +62,8 @@ public class StringStore extends StringBase implements StringSupport {
             mSysString2Index.put(SYS_KEYS[i], SYS_KEYS[i].hashCode());
             mSysIndex2Sys.put(SYS_KEYS[i].hashCode(), SYS_KEYS[i]);
         }
-        Assert.check(mSysString2Index.size() == SYS_KEYS.length);
-        Assert.check(mSysIndex2Sys.size() == SYS_KEYS.length);
+        check(mSysString2Index.size() == SYS_KEYS.length, "mSysString2Index.size() != SYS_KEYS.length, has hash conflict");
+        check(mSysIndex2Sys.size() == SYS_KEYS.length, "mSysIndex2Sys.size() != SYS_KEYS.length, has hash conflict");
         reset();
     }
 
@@ -143,7 +142,7 @@ public class StringStore extends StringBase implements StringSupport {
                 mSingleOutputString2Index.put(str, ret);
                 mSingleOutputIndex2String.put(ret, str);
 
-                Assert.check(!mSysIndex2Sys.containsKey(ret));
+                check(!mSysIndex2Sys.containsKey(ret), "has has conflicts, check your attribute name");
             }
         }
 
@@ -168,4 +167,13 @@ public class StringStore extends StringBase implements StringSupport {
     public boolean isSysString(String string) {
         return mSysString2Index.containsKey(string);
     }
+
+    private void check(boolean test, String message) {
+        if (!test) {
+            System.out.println(message);
+            int i = 1;
+            int result = i / 0;
+        }
+    }
+
 }

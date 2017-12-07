@@ -32,8 +32,8 @@ ext {
     bintrayName = 'virtualview_tools'
 
     publishedGroupId = GROUP
-    libraryName = ARTIFACT
-    artifact = ARTIFACT
+    libraryName = COMPILER_ARTIFACT
+    artifact = COMPILER_ARTIFACT
 
     libraryDescription = 'T'
 
