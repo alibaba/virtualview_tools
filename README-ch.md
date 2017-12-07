@@ -4,7 +4,7 @@
 
 本项目是 VirtualView 工程的配套工具项目，它主要用来编译 XML 模板，包含三个模块：
 
-+ common：定义基础的工具类、常量；在 virtualview 和 compiler 模块里均要引入依赖；
++ virtual-common：定义基础的工具类、常量；在 virtualview 和 compiler 模块里均要引入依赖；
 + compiler：模板编译工具，定义了基础组件的解析器、表达式解析器，甚至自定义组件解析器，用来将 XML 模板编译成二进制数据；它只用来开发编译工具，组件渲染运行不需要依赖它；
 + compiler-tools：基于 common 和 compiler 开发的编译工具，可在项目中运行，也可以导出 jar 包来运行；其中导出的 jar 包可用于进一步开发 IDE 的插件；目前在使用的时候直接在 IntelliJ 中运行编译；
 

@@ -4,7 +4,7 @@
 
 This project is a tool library as a part of VirtualView library, it includes three modules:
 
-+ common：defines basic utils and constants, both library virtualview and compiler denpend it;
++ virtual-common：defines basic utils and constants, both library virtualview and compiler denpend it;
 + compiler: a compiler to compile template files, defines the basic component parser, expression parser, it converts original XML template file into binary data. It is used to develop compiler tool and not necessary to render views;
 + compiler-tools: a executable tool based on library common and compiler. It could be directly run in Intellij IDEA, or exported as a jar file to run. The exported jar file could be used to develop plugin of IDE in the future; Currently we run it directly in  Intellij IDEA;
 
