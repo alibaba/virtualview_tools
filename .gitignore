@@ -10,8 +10,8 @@
 .idea/modules.xml
 .gradle/
 *.out.xml
-common/bin/
-common/build/
+virtual-common/bin/
+virtual-common/build/
 compiler/build/
 compiler/bin/
 compiler-tools/bin/
