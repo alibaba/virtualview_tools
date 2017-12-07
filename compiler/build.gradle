@@ -27,6 +27,30 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
+ext {
+    bintrayRepo = 'Tangram'
+    bintrayName = 'virtualview_tools'
+
+    publishedGroupId = GROUP
+    libraryName = ARTIFACT
+    artifact = ARTIFACT
+
+    libraryDescription = 'T'
+
+    siteUrl = 'https://github.com/alibaba/virtualview_tools'
+    gitUrl = 'git@github.com:alibaba/virtualview_tools.git'
+
+    libraryVersion = VERSION_NAME
+
+    developerId = 'longerian'
+    developerName = 'longerian'
+    developerEmail = 'xlhongultimate@gmail.com'
+
+    licenseName = 'MIT'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
 sourceSets {
     main {
         java {
@@ -45,7 +69,12 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-File deployConfig = rootProject.file('deploy_compiler.gradle')
+File deployConfig = rootProject.file('compilerJcenterDeploy.gradle')
 if (deployConfig.exists()) {
-    apply from: rootProject.file('deploy_compiler.gradle')
+    apply from: rootProject.file('compilerJcenterDeploy.gradle')
+}
+
+File installConfig = rootProject.file('compilerJcenterInstall.gradle')
+if (installConfig.exists()) {
+    apply from: rootProject.file('compilerJcenterInstall.gradle')
 }

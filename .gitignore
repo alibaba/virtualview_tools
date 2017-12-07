@@ -21,3 +21,5 @@ compiler-tools/compiler-tools/
 
 jcenterDeploy.gradle
 jcenterInstall.gradle
+compilerJcenterDeploy.gradle
+compilerJcenterInstall.gradle
