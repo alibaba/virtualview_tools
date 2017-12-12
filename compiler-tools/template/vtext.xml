@@ -140,6 +140,24 @@
             layoutHeight="20" />
 
     <VText
+            text="Title: borderWidth = 1 borderColor = #0088FF borderRadius = 2"
+            textSize="12"
+            textColor="#333333"
+            background="#008899"
+            layoutWidth="match_parent"
+            layoutHeight="20" />
+
+    <VText
+            text="Hello Virtual View"
+            textSize="12"
+            textColor="#333333"
+            borderColor="#0088FF"
+            borderWidth="1"
+            borderRadius="2"
+            layoutWidth="wrap_content"
+            layoutHeight="20" />
+
+    <VText
             text="Title: gravity = h_center|v_center"
             textSize="12"
             textColor="#333333"
