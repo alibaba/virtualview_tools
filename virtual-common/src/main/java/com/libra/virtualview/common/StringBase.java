@@ -203,5 +203,5 @@ public class StringBase {
     final public static int STR_ID_fixBy = 97444684;
     final public static int STR_ID_alpha = 92909918;
     final public static int STR_ID_ck = 3176;
-    final public static int STR_ID_BORDER_RADIUS = 1349188574;
+    final public static int STR_ID_borderRadius = 1349188574;
 }
