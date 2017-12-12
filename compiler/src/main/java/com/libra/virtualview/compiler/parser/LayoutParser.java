@@ -53,7 +53,14 @@ public abstract class LayoutParser extends ViewBaseParser {
                             Log.d(TAG, "parse borderWidth:" + value);
                         }
                         break;
-
+                    case StringBase.STR_ID_borderRadius:
+                        if (!parseFloat(value)) {
+                            ret = CONVERT_RESULT_FAILED;
+                            Log.e(TAG, "borderRadius value error:" + value);
+                        } else {
+                            Log.d(TAG, "parse borderRadius:" + value);
+                        }
+                        break;
                     case StringBase.STR_ID_borderColor:
                         if (!parseColor(value)) {
                             ret = CONVERT_RESULT_FAILED;
