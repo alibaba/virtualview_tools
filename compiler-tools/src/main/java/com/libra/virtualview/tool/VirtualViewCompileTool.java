@@ -53,7 +53,7 @@ public class VirtualViewCompileTool {
         RESOURCE_LIST.add(new Template("Progress", "progress.xml", 1));
         RESOURCE_LIST.add(new Template("VGraph", "vgraph.xml", 1));
         RESOURCE_LIST.add(new Template("Page", "page.xml", 1));
-        RESOURCE_LIST.add(new Template("PageItem", "532_tmall_hot_item.xml", 1));
+        RESOURCE_LIST.add(new Template("PageItem", "page_item.xml", 1));
         RESOURCE_LIST.add(new Template("PageScrollScript", "page_script.xml", 1));
         RESOURCE_LIST.add(new Template("Slider", "slider.xml", 1));
         RESOURCE_LIST.add(new Template("SliderItem", "slider_item.xml", 1));

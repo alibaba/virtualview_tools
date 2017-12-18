@@ -53,7 +53,38 @@ public abstract class LayoutParser extends ViewBaseParser {
                             Log.d(TAG, "parse borderWidth:" + value);
                         }
                         break;
-
+                    case StringBase.STR_ID_borderTopLeftRadius:
+                        if (!parseFloat(value)) {
+                            ret = CONVERT_RESULT_FAILED;
+                            Log.e(TAG, "borderTopLeftRadius value error:" + value);
+                        } else {
+                            Log.d(TAG, "parse borderTopLeftRadius:" + value);
+                        }
+                        break;
+                    case StringBase.STR_ID_borderTopRightRadius:
+                        if (!parseFloat(value)) {
+                            ret = CONVERT_RESULT_FAILED;
+                            Log.e(TAG, "borderTopRightRadius value error:" + value);
+                        } else {
+                            Log.d(TAG, "parse borderTopRightRadius:" + value);
+                        }
+                        break;
+                    case StringBase.STR_ID_borderBottomLeftRadius:
+                        if (!parseFloat(value)) {
+                            ret = CONVERT_RESULT_FAILED;
+                            Log.e(TAG, "borderBottomLeftRadius value error:" + value);
+                        } else {
+                            Log.d(TAG, "parse borderBottomLeftRadius:" + value);
+                        }
+                        break;
+                    case StringBase.STR_ID_borderBottomRightRadius:
+                        if (!parseFloat(value)) {
+                            ret = CONVERT_RESULT_FAILED;
+                            Log.e(TAG, "borderBottomRightRadius value error:" + value);
+                        } else {
+                            Log.d(TAG, "parse borderBottomRightRadius:" + value);
+                        }
+                        break;
                     case StringBase.STR_ID_borderColor:
                         if (!parseColor(value)) {
                             ret = CONVERT_RESULT_FAILED;
