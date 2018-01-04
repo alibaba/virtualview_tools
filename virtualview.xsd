@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<!--
+  <xs:attribute name="id" type="xs:integer" />
+  <xs:attribute name="layoutWidth" type="xs:string" />
+  <xs:attribute name="layoutHeight" type="xs:string" /> -->
+
+  <!-- 各种枚举值定义 -->
+  <xs:simpleType name="color">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(#[a-eA-E0-9]{8})|(black)|(blue)|(cyan)|(dkgray)|(green)|(Itgray)|(magenta)|(red)|(transparen)|(yellow)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="gravity">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="right"/>
+      <xs:enumeration value="top"/>
+      <xs:enumeration value="bottom"/>
+      <xs:enumeration value="v_center"/>
+      <xs:enumeration value="h_center"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="autoDimDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="X"/>
+      <xs:enumeration value="Y"/>
+      <xs:enumeration value="NONE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="visibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="visible"/>
+      <xs:enumeration value="invisible"/>
+      <xs:enumeration value="gone"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="flag">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="flag_draw"/>
+      <xs:enumeration value="flag_event"/>
+      <xs:enumeration value="flag_dynamic"/>
+      <xs:enumeration value="flag_software"/>
+      <xs:enumeration value="flag_exposure"/>
+      <xs:enumeration value="flag_clickable"/>
+      <xs:enumeration value="flag_longclickable"/>
+      <xs:enumeration value="flag_touchable"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="orientation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="H"/>
+      <xs:enumeration value="V"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="scaleType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="fit_start"/>
+      <xs:enumeration value="fit_xy"/>
+      <xs:enumeration value="matrix"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="center_crop"/>
+      <xs:enumeration value="center_inside"/>
+      <xs:enumeration value="fit_center"/>
+      <xs:enumeration value="fit_end"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="textStyle">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="normal"/>
+      <xs:enumeration value="bold"/>
+      <xs:enumeration value="italic"/>
+      <xs:enumeration value="strike"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ellipsize">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="start"/>
+      <xs:enumeration value="marquee"/>
+      <xs:enumeration value="middle"/>
+      <xs:enumeration value="end"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="lineStyle">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="solid"/>
+      <xs:enumeration value="dash"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="graphType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="circle"/>
+      <xs:enumeration value="rect"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="graphStyle">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="stroke"/>
+      <xs:enumeration value="fill"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="flex-direction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="row"/>
+      <xs:enumeration value="column"/>
+      <xs:enumeration value="row-reverse"/>
+      <xs:enumeration value="column-reverse"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="flex-wrap">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="nowrap"/>
+      <xs:enumeration value="wrap"/>
+      <xs:enumeration value="wrap-reverse"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="justify-content">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="flex-start"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="flex-end"/>
+      <xs:enumeration value="space-between"/>
+      <xs:enumeration value="space-around"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="align-content">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="stretch"/>
+      <xs:enumeration value="flex-start"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="flex-end"/>
+      <xs:enumeration value="space-between"/>
+      <xs:enumeration value="space-around"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="align-items">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="stretch"/>
+      <xs:enumeration value="flex-start"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="flex-end"/>
+      <xs:enumeration value="baseline"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="scrollerMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="staggeredGrid"/>
+      <xs:enumeration value="linear"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- 基础属性定义 -->
+  <xs:complexType name="baseattr">
+    <xs:attribute name="id" type="xs:integer" use="required" />
+    <xs:attribute name="layoutWidth" type="xs:string" use="required" default="match_parent" />
+    <xs:attribute name="layoutHeight" type="xs:string" use="required" default="wrap_content" />
+    <xs:attribute name="layoutGravity" type="gravity" />
+    <xs:attribute name="autoDimX" type="xs:decimal" />
+    <xs:attribute name="autoDimY" type="xs:decimal" />
+    <xs:attribute name="autoDimDirection" type="autoDimDirection" />
+    <xs:attribute name="minWidth" type="xs:decimal" />
+    <xs:attribute name="minHeight" type="xs:decimal" />
+    <xs:attribute name="paddingLeft" type="xs:decimal" />
+    <xs:attribute name="paddingRight" type="xs:decimal" />
+    <xs:attribute name="paddingTop" type="xs:decimal" />
+    <xs:attribute name="paddingBottom" type="xs:decimal" />
+    <xs:attribute name="layoutMarginLeft" type="xs:decimal" />
+    <xs:attribute name="layoutMarginRight" type="xs:decimal" />
+    <xs:attribute name="layoutMarginTop" type="xs:decimal" />
+    <xs:attribute name="layoutMarginBottom" type="xs:decimal" />
+    <xs:attribute name="layoutDirection" type="gravity" />
+    <xs:attribute name="layoutRatio" type="xs:decimal" />
+    <xs:attribute name="background" type="color" />
+    <xs:attribute name="backgroundImage" type="xs:string" />
+    <xs:attribute name="borderWidth" type="xs:integer" />
+    <xs:attribute name="borderColor" type="color" />
+    <xs:attribute name="borderRadius" type="xs:decimal" />
+    <xs:attribute name="borderTopLeftRadius" type="xs:decimal" />
+    <xs:attribute name="borderTopRightRadius" type="xs:decimal" />
+    <xs:attribute name="borderBottomLeftRadius" type="xs:decimal" />
+    <xs:attribute name="borderBottomRightRadius" type="xs:decimal" />
+    <xs:attribute name="visibility" type="visibility" />
+    <xs:attribute name="gravity" type="gravity" />
+    <xs:attribute name="flag" type="flag" />
+    <xs:attribute name="dataTag" type="xs:string" />
+    <xs:attribute name="action" type="xs:string" />
+    <xs:attribute name="uuid" type="xs:string" />
+    <xs:attribute name="dataMode" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="basetextattr">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="text" type="xs:string" />
+      <xs:attribute name="textColor" type="color" />
+      <xs:attribute name="textSize" type="xs:decimal" />
+      <xs:attribute name="textStyle" type="textStyle" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="richtextattr">
+    <xs:complexContent>
+    <xs:extension base="basetextattr">
+      <xs:attribute name="ellipsize" type="ellipsize" />
+      <xs:attribute name="lines" type="xs:integer" />
+      <xs:attribute name="maxLines" type="xs:integer" />
+      <xs:attribute name="lineSpaceMultiplier" type="xs:decimal" />
+      <xs:attribute name="lineSpaceExtra" type="xs:decimal" />
+      <xs:attribute name="supportHTMLStyle" type="xs:boolean" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="lineattr">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="color" type="color" />
+      <xs:attribute name="paintWidth" type="xs:decimal" />
+      <xs:attribute name="orientation" type="orientation" />
+      <xs:attribute name="style" type="lineStyle" />
+      <xs:attribute name="dashEffect" type="xs:string" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="baseimageattr">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="scaleType" type="scaleType" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="richimageattr">
+    <xs:complexContent>
+    <xs:extension base="baseimageattr">
+      <xs:attribute name="maskColor" type="color" />
+      <xs:attribute name="disableCache" type="xs:boolean" />
+      <xs:attribute name="disablePlaceHolder" type="xs:boolean" />
+      <xs:attribute name="filterWhiteBg" type="xs:boolean" />
+      <xs:attribute name="ratio" type="xs:decimal" />
+      <xs:attribute name="blurRadius" type="xs:decimal" />
+      <xs:attribute name="fixBy" type="xs:integer" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="graphattr">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="color" type="color" />
+      <xs:attribute name="type" type="graphType" />
+      <xs:attribute name="paintStyle" type="graphStyle" />
+      <xs:attribute name="paintWidth" type="xs:decimal" />
+      <xs:attribute name="diameterX" type="xs:decimal" />
+      <xs:attribute name="diameterY" type="xs:decimal" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="progressattr">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="color" type="color" />
+      <xs:attribute name="initValue" type="xs:integer" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <!-- 原子组件 -->
+  <xs:element name="NLine" type="lineattr" />
+  <xs:element name="VLine" type="lineattr" />
+  <xs:element name="NText" type="richtextattr" />
+  <xs:element name="VText" type="basetextattr" />
+  <xs:element name="NImage" type="baseimageattr" />
+  <xs:element name="TMNImage" type="richimageattr" />
+  <xs:element name="VImage" type="baseimageattr" />
+  <xs:element name="VGraph" type="graphattr" />
+  <xs:element name="Progress" type="progressattr" />
+  <xs:element name="TMTips" type="baseattr" />
+  <xs:element name="TMRecommendText" type="baseattr" />
+  <xs:element name="TMRecommendBenefit" type="baseattr" />
+  <xs:element name="TMCommodity3DModelView" type="baseattr" />
+  <xs:element name="TMCommodityScenceView" type="baseattr" />
+  <xs:element name="TMCommodityShowWidowView" type="baseattr" />
+
+  <!-- 基础容器可持有的子组件定义 -->
+  <xs:complexType name="baselayout">
+    <xs:attribute name="id" type="xs:integer" use="required" />
+    <xs:attribute name="layoutWidth" type="xs:string" use="required" default="match_parent" />
+    <xs:attribute name="layoutHeight" type="xs:string" use="required" default="wrap_content" />
+    <xs:attribute name="layoutGravity" type="gravity" />
+    <xs:attribute name="autoDimX" type="xs:decimal" />
+    <xs:attribute name="autoDimY" type="xs:decimal" />
+    <xs:attribute name="autoDimDirection" type="autoDimDirection" />
+    <xs:attribute name="minWidth" type="xs:decimal" />
+    <xs:attribute name="minHeight" type="xs:decimal" />
+    <xs:attribute name="paddingLeft" type="xs:decimal" />
+    <xs:attribute name="paddingRight" type="xs:decimal" />
+    <xs:attribute name="paddingTop" type="xs:decimal" />
+    <xs:attribute name="paddingBottom" type="xs:decimal" />
+    <xs:attribute name="layoutMarginLeft" type="xs:decimal" />
+    <xs:attribute name="layoutMarginRight" type="xs:decimal" />
+    <xs:attribute name="layoutMarginTop" type="xs:decimal" />
+    <xs:attribute name="layoutMarginBottom" type="xs:decimal" />
+    <xs:attribute name="layoutDirection" type="gravity" />
+    <xs:attribute name="layoutRatio" type="xs:decimal" />
+    <xs:attribute name="background" type="color" />
+    <xs:attribute name="backgroundImage" type="xs:string" />
+    <xs:attribute name="borderWidth" type="xs:integer" />
+    <xs:attribute name="borderColor" type="color" />
+    <xs:attribute name="visibility" type="visibility" />
+    <xs:attribute name="gravity" type="gravity" />
+    <xs:attribute name="flag" type="flag" />
+    <xs:attribute name="dataTag" type="xs:string" />
+    <xs:attribute name="action" type="xs:string" />
+    <xs:attribute name="uuid" type="xs:string" />
+    <xs:attribute name="dataMode" type="xs:string" />
+    <xs:sequence>
+      <xs:element ref="NLine" />
+      <xs:element ref="VLine" />
+      <xs:element ref="NText" />
+      <xs:element ref="VText" />
+      <xs:element ref="NImage" />
+      <xs:element ref="TMNImage" />
+      <xs:element ref="VImage" />
+      <xs:element ref="VGraph" />
+      <xs:element ref="Progress" />
+      <xs:element ref="TMTips" />
+      <xs:element ref="TMRecommendText" />
+      <xs:element ref="TMRecommendBenefit" />
+      <xs:element ref="TMCommodity3DModelView" />
+      <xs:element ref="TMCommodityScenceView" />
+      <xs:element ref="TMCommodityShowWidowView" />
+      <xs:element ref="Container" />
+      <xs:element ref="FlexLayout" />
+      <xs:element ref="VH" />
+      <xs:element ref="VHLayout" />
+      <xs:element ref="VH2Layout" />
+      <xs:element ref="RatioLayout" />
+      <xs:element ref="FrameLayout" />
+      <xs:element ref="GridLayout" />
+      <xs:element ref="Grid" />
+      <xs:element ref="Scroller" />
+      <xs:element ref="Slider" />
+      <xs:element ref="Page" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="containerlayout">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="order" type="xs:integer" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="flexlayout">
+    <xs:complexContent>
+    <xs:extension base="baselayout">
+      <xs:attribute name="flex-direction" type="flex-direction" default="row" />
+      <xs:attribute name="flex-wrap" type="flex-wrap" default="nowrap" />
+      <xs:attribute name="justify-content" type="justify-content" default="flex-start" />
+      <xs:attribute name="align-content" type="align-content" default="stretch" />
+      <xs:attribute name="align-items" type="align-items" default="stretch" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="nvhlayout">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="orientation" type="orientation" />
+      <xs:attribute name="itemWidth" type="xs:decimal" />
+      <xs:attribute name="itemHeight" type="xs:decimal" />
+      <xs:attribute name="itemMargin" type="xs:decimal" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="linearlayout">
+    <xs:complexContent>
+    <xs:extension base="baselayout">
+      <xs:attribute name="orientation" type="orientation" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="gridlayout">
+    <xs:complexContent>
+    <xs:extension base="baselayout">
+      <xs:attribute name="colCount" type="xs:integer" />
+      <xs:attribute name="itemHeight" type="xs:decimal" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="grid">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="colCount" type="xs:integer" />
+      <xs:attribute name="itemHeight" type="xs:decimal" />
+      <xs:attribute name="itemVerticalMargin" type="xs:decimal" />
+      <xs:attribute name="itemHorizontalMargin" type="xs:decimal" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="scroller">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="orientation" type="orientation" />
+      <xs:attribute name="mode" type="scrollerMode" />
+      <xs:attribute name="onAutoRefresh" type="xs:string" />
+      <xs:attribute name="autoRefreshThreshold" type="xs:integer" />
+      <xs:attribute name="span" type="xs:decimal" />
+      <xs:attribute name="supportSticky" type="xs:boolean" />
+      <xs:attribute name="lineSpace" type="xs:decimal" />
+      <xs:attribute name="firstSpace" type="xs:decimal" />
+      <xs:attribute name="lastSpace" type="xs:decimal" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="slider">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="orientation" type="orientation" />
+      <xs:attribute name="itemWidth" type="xs:decimal" />
+      <xs:attribute name="onScroll" type="xs:string" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="page">
+    <xs:complexContent>
+    <xs:extension base="baseattr">
+      <xs:attribute name="orientation" type="orientation" />
+      <xs:attribute name="onPageFlip" type="xs:string" />
+      <xs:attribute name="autoSwitch" type="xs:boolean" />
+      <xs:attribute name="canSlide" type="xs:boolean" />
+      <xs:attribute name="stayTime" type="xs:integer" />
+      <xs:attribute name="autoSwitchTime" type="xs:integer" />
+      <xs:attribute name="animatorTime" type="xs:integer" />
+    </xs:extension>
+  </xs:complexContent>
+  </xs:complexType>
+
+  <!-- 容器组件 -->
+  <xs:element name="Container" type="containerlayout" />
+  <xs:element name="FlexLayout" type="flexlayout" />
+  <xs:element name="VH" type="nvhlayout" />
+  <xs:element name="VHLayout" type="linearlayout" />
+  <xs:element name="VH2Layout" type="linearlayout" />
+  <xs:element name="RatioLayout" type="linearlayout" />
+  <xs:element name="FrameLayout" type="baselayout" />
+  <xs:element name="GridLayout" type="gridlayout" />
+  <xs:element name="Grid" type="grid" />
+  <xs:element name="Scroller" type="scroller" />
+  <xs:element name="Slider" type="slider" />
+  <xs:element name="Page" type="page" />
+
+</xs:schema>
