@@ -76,6 +76,12 @@ public class SliderParser extends ViewBaseParser {
                     Log.d(TAG, "convertAttribute onScroll:" + value + "  ret:" + ret);
                     break;
 
+                case StringBase.STR_ID_span:
+                    if(!parseNumber(value)) {
+                        ret = CONVERT_RESULT_ERROR;
+                    }
+                    break;
+
                 default:
                     ret = CONVERT_RESULT_FAILED;
                     break;
