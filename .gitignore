@@ -18,6 +18,7 @@ compiler-tools/bin/
 compiler-tools/template/build/
 compiler-tools/template/*.txt
 compiler-tools/compiler-tools/
+local.properties
 
 #jcenterDeploy.gradle
 #jcenterInstall.gradle
