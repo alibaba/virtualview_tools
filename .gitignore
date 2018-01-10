@@ -19,7 +19,7 @@ compiler-tools/template/build/
 compiler-tools/template/*.txt
 compiler-tools/compiler-tools/
 
-jcenterDeploy.gradle
-jcenterInstall.gradle
-compilerJcenterDeploy.gradle
-compilerJcenterInstall.gradle
+#jcenterDeploy.gradle
+#jcenterInstall.gradle
+#compilerJcenterDeploy.gradle
+#compilerJcenterInstall.gradle
