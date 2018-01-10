@@ -45,7 +45,7 @@ public class StringBase {
             "backgroundImage", "Container", "span", "paintStyle", "var", "vList", "dataParam", "autoRefreshThreshold", "dataMode", "waterfall",
             "supportHTMLStyle", "lineSpaceMultiplier", "lineSpaceExtra", "borderWidth", "borderColor", "maxLines", "dashEffect", "lineSpace", "firstSpace", "lastSpace",
             "maskColor", "blurRadius", "filterWhiteBg", "ratio", "disablePlaceHolder", "disableCache", "fixBy", "alpha", "ck","borderRadius",
-            "borderTopLeftRadius", "borderTopRightRadius", "borderBottomLeftRadius", "borderBottomRightRadius"
+            "borderTopLeftRadius", "borderTopRightRadius", "borderBottomLeftRadius", "borderBottomRightRadius", "tag"
     };
 
     public static final int[] SYS_KEYS_INDEX = {1302701180, -1822277072, 1310765783, 74637979, 82026147, -1991132755,
@@ -64,7 +64,7 @@ public class StringBase {
             -936434099, 1490730380, 1292595405, 1593011297, 3536714, 789757939, 116519, 111344180, -377785597, -51356769,
             1788852333, -213632750, 506010071, -667362093, -1118334530, 741115130, 722830999, 390232059, 1037639619,
             -1807275662, -172008394, 2002099216, -77812777, -1428201511, 617472950, 108285963, -1358064245, -1012322950,
-            97444684, 92909918, 3176, 1349188574, -1228066334, 333432965, 581268560, 588239831};
+            97444684, 92909918, 3176, 1349188574, -1228066334, 333432965, 581268560, 588239831, 114586};
 
     final public static int STR_ID_SYS_KEY_COUNT = SYS_KEYS.length;
 
@@ -225,4 +225,7 @@ public class StringBase {
     final public static int STR_ID_borderTopRightRadius = 333432965;
     final public static int STR_ID_borderBottomLeftRadius = 581268560;
     final public static int STR_ID_borderBottomRightRadius = 588239831;
+
+    // tag属性, 用来给View绑定业务相关的数据, 例如打点数据等.
+    final public static int STR_ID_tag = 114586;
 }
