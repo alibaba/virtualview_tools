@@ -34,6 +34,7 @@ public class TextBaseCommon {
     public final static int UNDERLINE = 4;
     public final static int STRIKE = 8;
 
+    public final static int NONE = -1;
     public final static int START = 0;
     public final static int MIDDLE = 1;
     public final static int END = 2;

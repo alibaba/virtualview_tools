@@ -82,6 +82,8 @@ public abstract class TextBaseParser extends ViewBaseParser {
                         value.setIntValue(TextBaseCommon.MIDDLE);
                     } else if (value.mStrValue.equals("end")) {
                         value.setIntValue(TextBaseCommon.END);
+                    } else if (value.mStrValue.equals("none")) {
+                        value.setIntValue(TextBaseCommon.NONE);
                     } else {
                         Log.e(TAG, "parse ellipsize error");
                         ret = CONVERT_RESULT_ERROR;
