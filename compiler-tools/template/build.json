@@ -1,26 +1,5 @@
 {
   "template": [
-    "532_fast_channel_item.xml",
-    "532_tmall_hot.xml",
-    "532_tmall_hot_item.xml",
-    "532_guess_like_item.xml",
-    "532_brand_shop.xml",
-    "532_brand_shop_item.xml",
-    "532_brand_fast_buy.xml",
-    "532_brand_fast_buy_item.xml",
-    "532_user_recommend.xml",
-    "532_user_recommend_item.xml",
-    "532_life_research_item.xml",
-    "532_image.xml",
-    "532_user_juhuasuan_recommend_item.xml",
-    "532_user_similar_product_item.xml",
-    "610_industry_entry.xml",
-    "610_activity_one_plus_three.xml",
-    "610_activity_one_plus_three_item.xml",
-    "610_scence_3d_model_item.xml",
-    "610_scence_show_window_item.xml",
-    "620_black_box_item.xml",
-    "620_brand_list_item.xml",
-    "620_title.xml"
+    {"type":"VH","path":"vh.xml","version":"1","platform":"android"}
   ]
 }

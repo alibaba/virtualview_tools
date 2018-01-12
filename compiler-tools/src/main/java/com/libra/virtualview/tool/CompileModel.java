@@ -31,6 +31,6 @@ import java.util.List;
  */
 public class CompileModel {
 
-    public List<String> template;
+    public List<Template> template;
 
 }

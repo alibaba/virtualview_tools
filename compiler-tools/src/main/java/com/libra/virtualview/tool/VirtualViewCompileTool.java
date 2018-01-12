@@ -100,16 +100,15 @@ public class VirtualViewCompileTool {
                     try {
                         Reader configReader = new BufferedReader(new FileReader(config.getCanonicalPath()));
                         CompileModel model = gson.fromJson(configReader, CompileModel.class);
-                        if (model == null || model.template == null) {
+                        List<Template> templateList = model.template;
+                        if (null == model || null == templateList) {
                             System.out.println("config file error, check it");
                         }
-                        int size = model.template.size();
                         String rootDir = path + "/";
-                        for (int i = 0; i < size; i++) {
-                            Template node = RESOURCE_LIST.get(i);
-                            node.templatePath = rootDir + node.templatePath;
+                        for (Template template : templateList) {
+                            template.templatePath = rootDir + template.templatePath;
                         }
-                        compile(rootDir, RESOURCE_LIST);
+                        compile(rootDir, templateList);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
