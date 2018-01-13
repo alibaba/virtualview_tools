@@ -24,17 +24,23 @@
 
 package com.libra.virtualview.tool;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by longerian on 2017/5/20.
  */
 public class Template {
 
+    @SerializedName("type")
     public final String type;
 
+    @SerializedName("path")
     public String templatePath;
 
+    @SerializedName("version")
     public int version;
 
+    @SerializedName("platform")
     public String platform;
 
     public Template(String type, String templatePath, int version) {

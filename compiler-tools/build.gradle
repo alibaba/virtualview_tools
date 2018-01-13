@@ -27,6 +27,7 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'application'
 apply plugin: 'java'
+apply plugin: "us.kirchmeier.capsule"
 
 sourceSets {
     main {
@@ -52,4 +53,15 @@ dependencies {
 File deployConfig = rootProject.file('deploy_compiler.gradle')
 if (deployConfig.exists()) {
     apply from: rootProject.file('deploy_compiler.gradle')
+}
+
+//清除上次的编译过的文件
+task clearPj(type:Delete){
+    delete 'build','target'
+}
+
+task generateJar(type: FatCapsule){
+    applicationClass 'com.libra.virtualview.tool.VirtualViewCompileTool'
+
+    baseName 'compiler'
 }
