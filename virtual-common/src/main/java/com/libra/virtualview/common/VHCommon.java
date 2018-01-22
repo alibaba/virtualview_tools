@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,9 @@ package com.libra.virtualview.common;
  */
 
 public class VHCommon {
-    public final static int VERTICAL = 1;
-    public final static int HORIZONTAL = 2;
+	public final static int VERTICAL = 0;
+    public final static int HORIZONTAL = 1;
+//    public final static int VERTICAL = 1;
+//    public final static int HORIZONTAL = 2;
 
 }

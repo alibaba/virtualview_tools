@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,9 +61,9 @@ public class ScrollerParser extends ViewBaseParser {
             switch (key) {
                 case StringBase.STR_ID_orientation:
                     if (TextUtils.equals(value.mStrValue, "H")) {
-                        value.setIntValue(0);
-                    } else if (TextUtils.equals(value.mStrValue, "V")) {
                         value.setIntValue(1);
+                    } else if (TextUtils.equals(value.mStrValue, "V")) {
+                        value.setIntValue(0);
                     } else {
                         Log.e(TAG, "parser orientation failed:" + value.mStrValue);
                         ret = ViewBaseParser.CONVERT_RESULT_ERROR;

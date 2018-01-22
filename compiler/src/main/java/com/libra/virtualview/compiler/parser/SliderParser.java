@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -74,12 +74,6 @@ public class SliderParser extends ViewBaseParser {
                 case StringBase.STR_ID_onScroll:
                     ret = exprParse(value);
                     Log.d(TAG, "convertAttribute onScroll:" + value + "  ret:" + ret);
-                    break;
-
-                case StringBase.STR_ID_span:
-                    if(!parseNumber(value)) {
-                        ret = CONVERT_RESULT_ERROR;
-                    }
                     break;
 
                 default:

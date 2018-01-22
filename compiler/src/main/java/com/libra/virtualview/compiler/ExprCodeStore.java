@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -78,26 +78,21 @@ public class ExprCodeStore {
         }
     }
 
-    public int storeToFile(RandomAccessFile file) {
+    public int storeToFile(RandomAccessMemByte file) {
         int totalSize = 0;
 
         if (null != file) {
-            try {
-                file.writeInt(mCodes.size());
-                Iterator<ExprCode> iterator = mCodes.keySet().iterator();
-                while (iterator.hasNext()) {
-                    ExprCode code = iterator.next();
-                    Integer integer = mCodes.get(code);
-                    file.writeInt(integer.intValue());
-                    file.writeShort(code.size());
-                    for (byte b : code.mCodeBase) {
-                        file.writeByte(b);
-                    }
-                    totalSize += 4 + code.size() + 2;
+            file.writeInt(mCodes.size());
+            Iterator<ExprCode> iterator = mCodes.keySet().iterator();
+            while (iterator.hasNext()) {
+                ExprCode code = iterator.next();
+                Integer integer = mCodes.get(code);
+                file.writeInt(integer.intValue());
+                file.writeShort(code.size());
+                for (byte b : code.mCodeBase) {
+                    file.writeByte(b);
                 }
-            } catch (IOException e) {
-                Log.e(TAG, "storeToFile error:" + e);
-                e.printStackTrace();
+                totalSize += 4 + code.size() + 2;
             }
         }
 

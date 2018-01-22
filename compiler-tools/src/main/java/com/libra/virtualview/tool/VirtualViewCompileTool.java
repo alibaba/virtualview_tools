@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,16 +24,13 @@
 
 package com.libra.virtualview.tool;
 
-import com.google.gson.Gson;
-import com.libra.virtualview.common.StringBase;
 import com.libra.virtualview.compiler.ViewCompiler;
 import com.libra.virtualview.compiler.parser.ScrollerParser;
 import com.libra.virtualview.compiler.parser.biz.*;
-import com.sun.org.apache.regexp.internal.RE;
 
 import java.io.*;
+import java.net.URL;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,122 +38,76 @@ import java.util.List;
  */
 public class VirtualViewCompileTool {
 
-    public static List<Template> RESOURCE_LIST = new ArrayList<>();
-
-    static {
-        RESOURCE_LIST.add(new Template("NText", "ntext.xml", 1));
-        RESOURCE_LIST.add(new Template("VText", "vtext.xml", 1));
-        RESOURCE_LIST.add(new Template("NImage", "nimage.xml", 1));
-        RESOURCE_LIST.add(new Template("VImage", "vimage.xml", 1));
-        RESOURCE_LIST.add(new Template("NLine", "nline.xml", 1));
-        RESOURCE_LIST.add(new Template("VLine", "vline.xml", 1));
-        RESOURCE_LIST.add(new Template("Progress", "progress.xml", 1));
-        RESOURCE_LIST.add(new Template("VGraph", "vgraph.xml", 1));
-        RESOURCE_LIST.add(new Template("Page", "page.xml", 1));
-        RESOURCE_LIST.add(new Template("PageItem", "page_item.xml", 1));
-        RESOURCE_LIST.add(new Template("PageScrollScript", "page_script.xml", 1));
-        RESOURCE_LIST.add(new Template("Slider", "slider.xml", 1));
-        RESOURCE_LIST.add(new Template("SliderItem", "slider_item.xml", 1));
-        RESOURCE_LIST.add(new Template("FrameLayout", "framelayout.xml", 1));
-        RESOURCE_LIST.add(new Template("RatioLayout", "ratiolayout.xml", 1));
-        RESOURCE_LIST.add(new Template("GridLayout", "gridlayout.xml", 1));
-        RESOURCE_LIST.add(new Template("Grid", "grid.xml", 1));
-        RESOURCE_LIST.add(new Template("GridItem", "grid_item.xml", 1));
-        RESOURCE_LIST.add(new Template("VHLayout", "vhlayout.xml", 1));
-        RESOURCE_LIST.add(new Template("VH2Layout", "vh2layout.xml", 1));
-        RESOURCE_LIST.add(new Template("VH", "vh.xml", 1));
-        RESOURCE_LIST.add(new Template("ScrollerVL", "scroll_vl.xml", 1));
-        RESOURCE_LIST.add(new Template("ScrollerVS", "scroll_vs.xml", 1));
-        RESOURCE_LIST.add(new Template("ScrollerH", "scroll_h.xml", 1));
-        RESOURCE_LIST.add(new Template("TotalContainer", "totalcontainer.xml", 1));
-        RESOURCE_LIST.add(new Template("ClickScript", "click_script.xml", 1));
-        RESOURCE_LIST.add(new Template("TmallComponent1", "tmall_component_1.xml", 1));
-        RESOURCE_LIST.add(new Template("TmallComponent2", "tmall_component_2.xml", 1));
-        RESOURCE_LIST.add(new Template("TmallComponent3", "tmall_component_3.xml", 1));
-        RESOURCE_LIST.add(new Template("TmallComponent4", "tmall_component_4.xml", 1));
-        RESOURCE_LIST.add(new Template("TmallComponent5", "tmall_component_5.xml", 1));
-        RESOURCE_LIST.add(new Template("TmallComponent6", "tmall_component_6.xml", 1));
-        RESOURCE_LIST.add(new Template("TmallComponent7", "tmall_component_7.xml", 1));
-        RESOURCE_LIST.add(new Template("TmallComponent8", "tmall_component_8.xml", 1));
-
-    }
-
     public static void main(String[] args) {
-        if (args.length == 0) {
-            compileInProject();
-        } else {
-            compileFromCmd(args[0]);
-        }
-    }
-
-    static private void compileFromCmd(String path) {
-        File file = new File(path);
-        if (file.exists()) {
-            if (file.isDirectory()) {
-                String configName = path + "/build.json";
-                File config = new File(configName);
-                if (config.exists()) {
-                    Gson gson = new Gson();
-                    try {
-                        Reader configReader = new BufferedReader(new FileReader(config.getCanonicalPath()));
-                        CompileModel model = gson.fromJson(configReader, CompileModel.class);
-                        List<Template> templateList = model.template;
-                        if (null == model || null == templateList) {
-                            System.out.println("config file error, check it");
-                        }
-                        String rootDir = path + "/";
-                        for (Template template : templateList) {
-                            template.templatePath = rootDir + template.templatePath;
-                        }
-                        compile(rootDir, templateList);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    System.out.println("build.json not found under " + path);
-                }
-            } else {
-                System.out.println("please provide a dir path");
+        if (args.length == 0 || (args.length == 1 && "jarBuild".equals(args[0]))) {
+            compileInProject(args.length == 1);
+            if (args.length == 0) {
+                diff(false);
             }
-        } else {
-            System.out.println("dir " + path + " not found");
         }
     }
 
-    static private void compileInProject() {
-        String rootDir = System.getProperty("user.dir") + "/compiler-tools/template/";
-        System.out.println(rootDir);
+    static private void diff(Boolean buildJar) {
+        VirtualViewCompileTool t = new VirtualViewCompileTool();
+        URL u = t.getClass().getClassLoader().getResource("");
+        String path = u.getPath();
+        if (!buildJar) {
+            path = path + "../";
+        }
+        FileDiffTool f = new FileDiffTool(path + "/build/out", path + "/build1/out");
+        f.diff();
+    }
+
+    static private void compileInProject(Boolean buildJar) {
+        VirtualViewCompileTool t = new VirtualViewCompileTool();
+        URL u = t.getClass().getClassLoader().getResource("");
+        String path = u.getPath();
+        if (!buildJar) {
+            path = path + "../";
+        }
+        String rootDir = path + "template/";
+        CompilerResourceConfig c = new CompilerResourceConfig(buildJar);
+        List<Template> RESOURCE_LIST = c.RESOURCE_LIST;
         int size = RESOURCE_LIST.size();
         for (int i = 0; i < size; i++) {
             Template node = RESOURCE_LIST.get(i);
             node.templatePath = rootDir + node.templatePath;
         }
-        compile(rootDir, RESOURCE_LIST);
+        compile(rootDir, RESOURCE_LIST, path);
     }
 
-    static private void compile(String rootDir, List<Template> paths) {
+    static private void compile(String readDir, List<Template> paths, String buildPath) {
         boolean ret = false;
-        ViewCompiler compiler = new ViewCompiler();
-        compiler.registerParser(new ScrollerParser.Builder());
-        compiler.registerParser(new TMTipsViewParser.Builder());
-        compiler.registerParser(new TMRecommendTextViewParser.Builder());
-        compiler.registerParser(new TMRecommendBenefitViewParser.Builder());
-        compiler.registerParser(new TMCommodityScenceViewParser.Builder());
-        compiler.registerParser(new TMCommodity3DModelViewParser.Builder());
-        compiler.registerParser(new TMCommodityShowWindowViewParser.Builder());
-        compiler.registerParser(new TM620RecommendBenefitViewParser.Builder());
-        compiler.registerParser(new TMPriceTextViewParser.Builder());
-        compiler.registerParser(new TotalContainerParser.Builder());
-        compiler.registerParser(new TM630RecommendMagicWandViewParser.Builder());
-        compiler.registerParser(new TM630CountDownViewParser.Builder());
-        compiler.registerParser(new TM830TabHeaderViewParser.Builder());
+        Boolean useNew = false;
+        useNew = true;
+        ViewCompiler compiler = new ViewCompiler(useNew);
+        if (!useNew) {
+            compiler.registerParser(new ScrollerParser.Builder());
+            compiler.registerParser(new TMTipsViewParser.Builder());
+            compiler.registerParser(new TMRecommendTextViewParser.Builder());
+            compiler.registerParser(new TMRecommendBenefitViewParser.Builder());
+            compiler.registerParser(new TMCommodityScenceViewParser.Builder());
+            compiler.registerParser(new TMCommodity3DModelViewParser.Builder());
+            compiler.registerParser(new TMCommodityShowWindowViewParser.Builder());
+            compiler.registerParser(new TM620RecommendBenefitViewParser.Builder());
+            compiler.registerParser(new TMPriceTextViewParser.Builder());
+            compiler.registerParser(new TotalContainerParser.Builder());
+            compiler.registerParser(new TM630RecommendMagicWandViewParser.Builder());
+            compiler.registerParser(new TM630CountDownViewParser.Builder());
+            compiler.registerParser(new TM830TabHeaderViewParser.Builder());
+        }
 
-        File dirPath = new File(rootDir + "build/out/");
-        File dirDytePath = new File(rootDir + "build/java/");
-        File dirTextPath = new File(rootDir + "build/txt/");
-        File dirSignPath = new File(rootDir + "build/sign/");
+
+        if (useNew) {
+            buildPath = buildPath + "build/";
+        } else {
+            buildPath = buildPath + "build1/";
+        }
+
+        File dirPath = new File(buildPath + "out/");
+        File dirDytePath = new File(buildPath + "java/");
+        File dirTextPath = new File(buildPath + "txt/");
+        File dirSignPath = new File(buildPath + "sign/");
 
         if (!dirPath.exists()) {
             dirPath.mkdirs();
@@ -174,10 +125,10 @@ public class VirtualViewCompileTool {
             dirSignPath.mkdirs();
         }
 
-        File androidDirPath = new File(rootDir + "build/android/out/");
-        File androidDirDytePath = new File(rootDir + "build/android/java/");
-        File androidDirTextPath = new File(rootDir + "build/android/txt/");
-        File androidDirSignPath = new File(rootDir + "build/android/sign/");
+        File androidDirPath = new File(buildPath + "android/out/");
+        File androidDirDytePath = new File(buildPath + "android/java/");
+        File androidDirTextPath = new File(buildPath + "android/txt/");
+        File androidDirSignPath = new File(buildPath + "android/sign/");
 
         if (!androidDirPath.exists()) {
             androidDirPath.mkdirs();
@@ -195,10 +146,10 @@ public class VirtualViewCompileTool {
             androidDirSignPath.mkdirs();
         }
 
-        File iphoneDirPath = new File(rootDir + "build/iphone/out/");
-        File iphoneDirDytePath = new File(rootDir + "build/iphone/java/");
-        File iphoneDirTextPath = new File(rootDir + "build/iphone/txt/");
-        File iphoneDirSignPath = new File(rootDir + "build/iphone/sign/");
+        File iphoneDirPath = new File(buildPath + "iphone/out/");
+        File iphoneDirDytePath = new File(buildPath + "iphone/java/");
+        File iphoneDirTextPath = new File(buildPath + "iphone/txt/");
+        File iphoneDirSignPath = new File(buildPath + "iphone/sign/");
 
         if (!iphoneDirPath.exists()) {
             iphoneDirPath.mkdirs();
@@ -225,10 +176,10 @@ public class VirtualViewCompileTool {
             } else {
                 platform = "";
             }
-            String path = rootDir + "build/" + platform + "out/" + resourceNode.type.replace("-", "_") + ".out";
-            String bytePath = rootDir + "build/" + platform + "java/" + resourceNode.type.replace("-", "_").toUpperCase() + ".java";
-            String textPath = rootDir + "build/" + platform + "txt/" + resourceNode.type.replace("-", "_") + ".txt";
-            String signPath = rootDir + "build/" + platform + "sign/" + resourceNode.type.replace("-", "_") + ".md5";
+            String path = buildPath + platform + "out/" + resourceNode.type.replace("-", "_") + ".out";
+            String bytePath = buildPath + platform + "java/" + resourceNode.type.replace("-", "_").toUpperCase() + ".java";
+            String textPath = buildPath + platform + "txt/" + resourceNode.type.replace("-", "_") + ".txt";
+            String signPath = buildPath + platform + "sign/" + resourceNode.type.replace("-", "_") + ".md5";
             compiler.resetString();
             compiler.resetExpr();
             if (compiler.newOutputFile(path, 1, resourceNode.version)) {

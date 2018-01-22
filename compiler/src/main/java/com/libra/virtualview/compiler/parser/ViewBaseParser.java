@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -128,7 +128,7 @@ public abstract class ViewBaseParser extends Parser {
             value.setIntValue(IDataLoaderCommon.MODE_APPEND);
         } else {
             ret = parseNumber(value);
-            if (ret && (value.mIntValue != IDataLoaderCommon.MODE_SET && value.mIntValue != IDataLoaderCommon.MODE_APPEND)) {
+            if (ret && (value.getmIntValue() != IDataLoaderCommon.MODE_SET && value.getmIntValue() != IDataLoaderCommon.MODE_APPEND)) {
                 ret = false;
             }
         }
@@ -147,7 +147,7 @@ public abstract class ViewBaseParser extends Parser {
             value.setIntValue(ViewBaseCommon.GONE);
         } else {
             ret = parseNumber(value);
-            if (ret && (value.mIntValue < 0 || value.mIntValue > 2)) {
+            if (ret && (value.getmIntValue() < 0 || value.getmIntValue() > 2)) {
                 ret = false;
             }
         }

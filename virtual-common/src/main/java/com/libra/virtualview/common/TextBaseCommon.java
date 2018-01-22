@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,6 @@ public class TextBaseCommon {
     public final static int UNDERLINE = 4;
     public final static int STRIKE = 8;
 
-    public final static int NONE = -1;
     public final static int START = 0;
     public final static int MIDDLE = 1;
     public final static int END = 2;

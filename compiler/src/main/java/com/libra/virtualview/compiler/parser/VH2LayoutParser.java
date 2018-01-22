@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,6 +49,7 @@ public class VH2LayoutParser extends VHLayoutParser {
 
     @Override
     public int getId() {
+    	
         return Common.VIEW_ID_VH2Layout;
     }
 

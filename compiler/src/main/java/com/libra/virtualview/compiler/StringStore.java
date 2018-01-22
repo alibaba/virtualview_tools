@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import com.libra.Log;
 import com.libra.TextUtils;
 import com.libra.expr.common.StringSupport;
 import com.libra.virtualview.common.StringBase;
+import com.sun.tools.javac.util.Assert;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -62,8 +63,8 @@ public class StringStore extends StringBase implements StringSupport {
             mSysString2Index.put(SYS_KEYS[i], SYS_KEYS[i].hashCode());
             mSysIndex2Sys.put(SYS_KEYS[i].hashCode(), SYS_KEYS[i]);
         }
-        check(mSysString2Index.size() == SYS_KEYS.length, "mSysString2Index.size() != SYS_KEYS.length, has hash conflict");
-        check(mSysIndex2Sys.size() == SYS_KEYS.length, "mSysIndex2Sys.size() != SYS_KEYS.length, has hash conflict");
+        Assert.check(mSysString2Index.size() == SYS_KEYS.length);
+        Assert.check(mSysIndex2Sys.size() == SYS_KEYS.length);
         reset();
     }
 
@@ -84,26 +85,21 @@ public class StringStore extends StringBase implements StringSupport {
     }
 
     // offset must be 10000, 20000.....
-    public int storeToFile(RandomAccessFile file) {
+    public int storeToFile(RandomAccessMemByte file) {
         int totalSize = 0;
 
         if (null != file) {
-            try {
-                int size = mSingleOutputString2Index.size();
-                file.writeInt(size);
-                Iterator<String> iterator = mSingleOutputString2Index.keySet().iterator();
-                while (iterator.hasNext()) {
-                    String string = iterator.next();
-                    int index = mSingleOutputString2Index.get(string);
-                    byte[] bs = string.getBytes();
-                    file.writeInt(index);
-                    file.writeShort(bs.length);
-                    file.write(bs);
-                    totalSize += 4 + bs.length + 2;
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "storeToFile error:" + e);
-                e.printStackTrace();
+            int size = mSingleOutputString2Index.size();
+            file.writeInt(size);
+            Iterator<String> iterator = mSingleOutputString2Index.keySet().iterator();
+            while (iterator.hasNext()) {
+                String string = iterator.next();
+                int index = mSingleOutputString2Index.get(string);
+                byte[] bs = string.getBytes();
+                file.writeInt(index);
+                file.writeShort(bs.length);
+                file.write(bs);
+                totalSize += 4 + bs.length + 2;
             }
         }
 
@@ -137,12 +133,15 @@ public class StringStore extends StringBase implements StringSupport {
             }
             if (0 == ret && create) {
                 ret = str.hashCode();
+                
+                Assert.check(!(mIndex2String.containsKey(ret) && !str.equals(mIndex2String.get(ret))));
+                
                 mString2Index.put(str, ret);
                 mIndex2String.put(ret, str);
                 mSingleOutputString2Index.put(str, ret);
                 mSingleOutputIndex2String.put(ret, str);
 
-                check(!mSysIndex2Sys.containsKey(ret), "has has conflicts, check your attribute name");
+                Assert.check(!mSysIndex2Sys.containsKey(ret));
             }
         }
 
@@ -167,13 +166,4 @@ public class StringStore extends StringBase implements StringSupport {
     public boolean isSysString(String string) {
         return mSysString2Index.containsKey(string);
     }
-
-    private void check(boolean test, String message) {
-        if (!test) {
-            System.out.println(message);
-            int i = 1;
-            int result = i / 0;
-        }
-    }
-
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import com.libra.Log;
 import com.libra.expr.common.ExprCode;
 import com.libra.expr.compiler.ExprCompiler;
 import com.libra.virtualview.common.Common;
+import com.libra.virtualview.compiler.alert.AlertView;
 import com.libra.virtualview.compiler.parser.FlexLayoutParser;
 import com.libra.virtualview.compiler.parser.FrameLayoutParser;
 import com.libra.virtualview.compiler.parser.GridLayoutParser;
@@ -61,12 +62,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +77,7 @@ public class ViewCompiler implements ExprCompiler.Listener {
     private final static String TAG = "ViewCompiler_TMTEST";
 
     private CodeWriter mCodeWrite = new CodeWriter();
+    private RandomAccessMemByte mMemByte = null;
     private RandomAccessFile mFile = null;
     private int mCodeTotalSize;
     private int mCodeTotalCount;
@@ -96,36 +93,42 @@ public class ViewCompiler implements ExprCompiler.Listener {
     private int mPageId;
 
     public ViewCompiler() {
+        this(true);
+    }
+
+    public ViewCompiler(Boolean userNewParser) {
         mExprCompiler.setStringSupport(mStringStore);
         mExprCompiler.setListener(this);
+        if (userNewParser) {
+            mViewParserBuilds.add(new ConfigParser.Builder());
+        } else {
+            mViewParserBuilds.add(new FrameLayoutParser.Builder());
+            mViewParserBuilds.add(new VHLayoutParser.Builder());
+            mViewParserBuilds.add(new VH2LayoutParser.Builder());
+            mViewParserBuilds.add(new RatioLayoutParser.Builder());
+            mViewParserBuilds.add(new GridLayoutParser.Builder());
+            mViewParserBuilds.add(new FlexLayoutParser.Builder());
 
-        mViewParserBuilds.add(new FrameLayoutParser.Builder());
-        mViewParserBuilds.add(new VHLayoutParser.Builder());
-        mViewParserBuilds.add(new VH2LayoutParser.Builder());
-        mViewParserBuilds.add(new RatioLayoutParser.Builder());
-        mViewParserBuilds.add(new GridLayoutParser.Builder());
-        mViewParserBuilds.add(new FlexLayoutParser.Builder());
+            mViewParserBuilds.add(new NativeTextParser.Builder());
+            mViewParserBuilds.add(new VirtualTextParser.Builder());
+            mViewParserBuilds.add(new NativeImageParser.Builder());
+            mViewParserBuilds.add(new VirtualImageParser.Builder());
+            mViewParserBuilds.add(new TMVirtualImageParser.Builder());
+            mViewParserBuilds.add(new TMNImageParser.Builder());
+            mViewParserBuilds.add(new VirtualLineParser.Builder());
+            mViewParserBuilds.add(new NativeLineParser.Builder());
 
-        mViewParserBuilds.add(new NativeTextParser.Builder());
-        mViewParserBuilds.add(new VirtualTextParser.Builder());
-        mViewParserBuilds.add(new NativeImageParser.Builder());
-        mViewParserBuilds.add(new VirtualImageParser.Builder());
-        mViewParserBuilds.add(new TMVirtualImageParser.Builder());
-        mViewParserBuilds.add(new TMNImageParser.Builder());
-        mViewParserBuilds.add(new VirtualLineParser.Builder());
-        mViewParserBuilds.add(new NativeLineParser.Builder());
+            mViewParserBuilds.add(new VirtualGraphParser.Builder());
+            mViewParserBuilds.add(new VirtualProgressParser.Builder());
+            mViewParserBuilds.add(new VirtualContainerParser.Builder());
+            mViewParserBuilds.add(new VirtualTimeParser.Builder());
 
-        mViewParserBuilds.add(new VirtualGraphParser.Builder());
-        mViewParserBuilds.add(new VirtualProgressParser.Builder());
-        mViewParserBuilds.add(new VirtualContainerParser.Builder());
-        mViewParserBuilds.add(new VirtualTimeParser.Builder());
-
-        mViewParserBuilds.add(new ScrollerParser.Builder());
-        mViewParserBuilds.add(new PageParser.Builder());
-        mViewParserBuilds.add(new GridParser.Builder());
-        mViewParserBuilds.add(new VHParser.Builder());
-        mViewParserBuilds.add(new SliderParser.Builder());
-
+            mViewParserBuilds.add(new ScrollerParser.Builder());
+            mViewParserBuilds.add(new PageParser.Builder());
+            mViewParserBuilds.add(new GridParser.Builder());
+            mViewParserBuilds.add(new VHParser.Builder());
+            mViewParserBuilds.add(new SliderParser.Builder());
+        }
         reset();
     }
 
@@ -140,7 +143,7 @@ public class ViewCompiler implements ExprCompiler.Listener {
         if (null != in) {
             try {
                 int length = in.available();
-                byte[]  buffer = new byte[length];
+                byte[] buffer = new byte[length];
                 in.read(buffer);
                 String content = new String(buffer);
 
@@ -178,13 +181,9 @@ public class ViewCompiler implements ExprCompiler.Listener {
     public void reset() {
         mStringStore.reset();
         mCodeWrite.init();
-        if (null != mFile) {
-            try {
-                mFile.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mFile = null;
+        if (null != mMemByte) {
+            mMemByte.close();
+            mMemByte = null;
             mCodeTotalSize = 4;
             mCodeTotalCount = 0;
         }
@@ -198,76 +197,76 @@ public class ViewCompiler implements ExprCompiler.Listener {
         boolean ret = false;
 
         if (!TextUtils.isEmpty(path)) {
-            mPageId = pageId;
-            mStringStore.setPageId(mPageId);
-            mExprCodeStore.setPageId(mPageId);
-
+            File file = new File(path);
+            if (file.exists()) {
+                file.delete();
+            }
             try {
-                File file = new File(path);
-                if (file.exists()) {
-                    file.delete();
-                }
-
                 mFile = new RandomAccessFile(path, "rw");
-                if (null != mFile) {
-                    // tag
-                    mFile.write(Common.TAG.getBytes());
-
-                    // version
-                    mFile.writeShort(Common.MAJOR_VERSION);
-                    mFile.writeShort(Common.MINOR_VERSION);
-                    mFile.writeShort(patchVersion);
-                    // 11
-
-                    // code start
-                    mFile.writeInt(0);
-                    // code len
-                    mFile.writeInt(0);
-
-                    // string start
-                    mFile.writeInt(0);
-                    // string len
-                    mFile.writeInt(0);
-
-                    // expr code start
-                    mFile.writeInt(0);
-                    // expr code len
-                    mFile.writeInt(0);
-
-                    // extra data start
-                    mFile.writeInt(0);
-                    // extra data len
-                    mFile.writeInt(0);
-
-                    // pageId
-                    mFile.writeShort(pageId);
-
-                    // dep pages
-                    if (null != depPageIds) {
-                        mFile.writeShort(depPageIds.length);
-                        for (int i = 0; i < depPageIds.length; ++i) {
-                            mFile.writeShort(depPageIds[i]);
-                        }
-                    } else {
-                        mFile.writeShort(0);
-                    }
-
-                    mCodeStartOffset = (int)mFile.length();
-
-                    // uiCodeTab item count
-                    mFile.writeInt(0);
-                }
-                ret = true;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Log.e(TAG, "not found exception:" + e);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e(TAG, "io exception:" + e);
             }
+            ret = newOutputInit(pageId, depPageIds, patchVersion);
         }
-
         return ret;
+    }
+
+    public boolean newOutputInit(int pageId, int[] depPageIds, int patchVersion) {
+        mPageId = pageId;
+        mStringStore.setPageId(mPageId);
+        mExprCodeStore.setPageId(mPageId);
+        mMemByte = new RandomAccessMemByte();
+        if (null != mMemByte) {
+            // tag
+            mMemByte.write(Common.TAG.getBytes());
+
+            // version
+            mMemByte.writeShort(Common.MAJOR_VERSION);
+            mMemByte.writeShort(Common.MINOR_VERSION);
+            mMemByte.writeShort(patchVersion);
+            // 11
+
+            // code start
+            mMemByte.writeInt(0);
+            // code len
+            mMemByte.writeInt(0);
+
+            // string start
+            mMemByte.writeInt(0);
+            // string len
+            mMemByte.writeInt(0);
+
+            // expr code start
+            mMemByte.writeInt(0);
+            // expr code len
+            mMemByte.writeInt(0);
+
+            // extra data start
+            mMemByte.writeInt(0);
+            // extra data len
+            mMemByte.writeInt(0);
+
+            // pageId
+            mMemByte.writeShort(pageId);
+
+            // dep pages
+            if (null != depPageIds) {
+                mMemByte.writeShort(depPageIds.length);
+                for (int i = 0; i < depPageIds.length; ++i) {
+                    mMemByte.writeShort(depPageIds[i]);
+                }
+            } else {
+                mMemByte.writeShort(0);
+            }
+
+            mCodeStartOffset = (int) mMemByte.length();
+
+            // uiCodeTab item count
+            mMemByte.writeInt(0);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean compile(String name, String path) {
@@ -276,60 +275,50 @@ public class ViewCompiler implements ExprCompiler.Listener {
     }
 
     public void extraStart() {
-        if (null != mFile) {
-            try {
-                mFile.seek(mFile.length());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (null != mMemByte) {
+            mMemByte.seek(mMemByte.length());
         }
     }
 
     public void extraEnd(int len) {
-        if (null != mFile) {
-            try {
-                mFile.seek(39);
-                mFile.writeInt(len);
-
-                finish();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (null != mMemByte) {
+            mMemByte.seek(39);
+            mMemByte.writeInt(len);
+            finish();
         } else {
             Log.e(TAG, "file is null");
         }
     }
 
     public void writeInt(int v) {
-        if (null != mFile) {
-            try {
-                mFile.writeInt(v);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (null != mMemByte) {
+            mMemByte.writeInt(v);
         } else {
             Log.e(TAG, "file is null");
         }
     }
 
-    private void finish() {
-        try {
-            mFile.close();
-            mFile = null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e(TAG, "close file failed:" + e);
-        }
-    }
-
-    public void clear(String path) {
-        if (null != mFile) {
+    private boolean finish() {
+        boolean ret = true;
+        if (mFile != null) {
             try {
+                mFile.write(mMemByte.getByte());
                 mFile.close();
                 mFile = null;
             } catch (IOException e) {
                 e.printStackTrace();
+                ret = false;
             }
+        }
+        mMemByte.close();
+        mMemByte = null;
+        return ret;
+    }
+
+    public void clear(String path) {
+        if (null != mMemByte) {
+            mMemByte.close();
+            mMemByte = null;
         }
         File file = new File(path);
         if (null != file) {
@@ -337,6 +326,16 @@ public class ViewCompiler implements ExprCompiler.Listener {
         }
     }
 
+    public byte[] compileEndAndGet() {
+        byte[] bytes = null;
+        compileEndInternally();
+        if (mMemByte != null) {
+            bytes = mMemByte.getByte();
+            mMemByte.close();
+            mMemByte = null;
+        }
+        return bytes;
+    }
 
     public boolean compileEnd() {
         return compileEnd(false);
@@ -344,57 +343,55 @@ public class ViewCompiler implements ExprCompiler.Listener {
 
     public boolean compileEnd(boolean hasExtra) {
         boolean ret = false;
-        if (null != mFile) {
-            try {
-                // write ui code total size
-                mFile.seek(mCodeStartOffset);
-                mFile.writeInt(mCodeTotalCount);
-                mFile.seek(11);
-                mFile.writeInt(mCodeStartOffset);
-                mFile.writeInt(mCodeTotalSize);
-
-                // write string table start pos
-                int stringStart = (int) mFile.length();
-                mFile.writeInt(stringStart);
-                mFile.seek(stringStart);
-
-                // write string table
-                int totalStrLen = mStringStore.storeToFile(mFile);
-                if (totalStrLen > 0) {
-                    // write string len
-                    mFile.seek(23);
-                    mFile.writeInt(totalStrLen);
-                }
-
-                // write expr code table start pos
-                int exprCodeStart = (int) mFile.length();
-                mFile.seek(27);
-                mFile.writeInt(exprCodeStart);
-                mFile.seek(exprCodeStart);
-
-                // write expr table
-                int totalExprCodeLen = mExprCodeStore.storeToFile(mFile);
-                if (totalExprCodeLen > 0) {
-                    // write expr len
-                    mFile.seek(31);
-                    mFile.writeInt(totalExprCodeLen);
-                }
-
-                // write extra data start
-                mFile.seek(35);
-                mFile.writeInt((int)mFile.length());
-
-                if (!hasExtra) {
-                    finish();
-                }
-
-                ret = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        ret = compileEndInternally();
+        if (!hasExtra) {
+            ret &= finish();
         }
-
         return ret;
+    }
+
+    private boolean compileEndInternally() {
+        if (mMemByte != null) {
+            // write ui code total size
+            mMemByte.seek(mCodeStartOffset);
+            mMemByte.writeInt(mCodeTotalCount);
+            mMemByte.seek(11);
+            mMemByte.writeInt(mCodeStartOffset);
+            mMemByte.writeInt(mCodeTotalSize);
+
+            // write string table start pos
+            int stringStart = (int) mMemByte.length();
+            mMemByte.writeInt(stringStart);
+            mMemByte.seek(stringStart);
+
+            // write string table
+            int totalStrLen = mStringStore.storeToFile(mMemByte);
+            if (totalStrLen > 0) {
+                // write string len
+                mMemByte.seek(23);
+                mMemByte.writeInt(totalStrLen);
+            }
+
+            // write expr code table start pos
+            int exprCodeStart = (int) mMemByte.length();
+            mMemByte.seek(27);
+            mMemByte.writeInt(exprCodeStart);
+            mMemByte.seek(exprCodeStart);
+
+            // write expr table
+            int totalExprCodeLen = mExprCodeStore.storeToFile(mMemByte);
+            if (totalExprCodeLen > 0) {
+                // write expr len
+                mMemByte.seek(31);
+                mMemByte.writeInt(totalExprCodeLen);
+            }
+
+            // write extra data start
+            mMemByte.seek(35);
+            mMemByte.writeInt((int) mMemByte.length());
+            return true;
+        }
+        return false;
     }
 
     private Parser build(String name) {
@@ -430,6 +427,7 @@ public class ViewCompiler implements ExprCompiler.Listener {
             mNameID = nameId;
             mValue = value;
         }
+
         int mType;
         int mNameID;
         int mValue;
@@ -504,6 +502,9 @@ public class ViewCompiler implements ExprCompiler.Listener {
 //                                        Log.d(TAG, "compile prop key:" + strKey + "  value:" + value);
                                         // this and parent convert attribute, layout
                                         int convertResult = viewParser.convertAttribute(key, attrItem);
+                                        if (convertResult == -1) {
+                                            AlertView.alert("FileName= " + name + " VALUE ERROR:key=" + strKey + " value=" + attrItem.mStrValue);
+                                        }
                                         if ((ViewBaseParser.CONVERT_RESULT_FAILED == convertResult)) {
                                             if (null != parentParser) {
 //                                                Log.d(TAG, "compile prop 1");
@@ -525,18 +526,18 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                             // write value now!
                                             if (ViewBaseParser.AttrItem.TYPE_int == attrItem.mType) {
                                                 if (Parser.AttrItem.EXTRA_RP == attrItem.mExtra) {
-                                                    intAPDatas.put(key, attrItem.mIntValue);
+                                                    intAPDatas.put(key, attrItem.getmIntValue());
                                                 } else {
-                                                    intDatas.put(key, attrItem.mIntValue);
+                                                    intDatas.put(key, attrItem.getmIntValue());
                                                 }
                                             } else if (ViewBaseParser.AttrItem.TYPE_float == attrItem.mType) {
                                                 if (Parser.AttrItem.EXTRA_RP == attrItem.mExtra) {
                                                     floatAPDatas.put(key, attrItem.mFloatValue);
-                                                } else  {
+                                                } else {
                                                     floatDatas.put(key, attrItem.mFloatValue);
                                                 }
                                             } else if (ViewBaseParser.AttrItem.TYPE_code == attrItem.mType) {
-                                                codeDatas.put(key, attrItem.mIntValue);
+                                                codeDatas.put(key, attrItem.getmIntValue());
                                             } else if (ViewBaseParser.AttrItem.TYPE_string == attrItem.mType) {
                                                 // string
                                                 id = mStringStore.getStringId(value);
@@ -552,6 +553,7 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                         } else {
                                             // string
                                             id = mStringStore.getStringId(value);
+                                            System.out.println("==ABC " + viewParser.getClass().getName() + "=====" + strKey + " file=" + name);
                                             if (id != 0) {
                                                 // write string value
                                                 strDatas.put(key, id);
@@ -569,7 +571,16 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                                 break;
                                             }
                                         } else {
-                                            ret = false;
+                                            //新增的key 按照string处理
+                                            int key2 = mStringStore.getStringId(strKey, true);
+                                            if (key2 == 0) {
+                                                AlertView.alert("custom key error:" + strKey);
+                                            }
+                                            String value = parser.getAttributeValue(i);
+                                            //EL or String
+                                            attrItem.setStr(value);
+
+                                            ret = true;
                                             Log.e(TAG, "getString2 error:" + parser.getName() + "  attribute name:" + parser.getAttributeName(i) + "   value:" + parser.getAttributeValue(i));
                                             break;
                                         }
@@ -577,68 +588,9 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                 }
 
                                 if (ret) {
-                                    // write int attribute
-                                    count = intDatas.size();
-                                    mCodeWrite.writeByte((byte) count);
-                                    Set<Integer> dataSet = intDatas.keySet();
-                                    for (Integer key : dataSet) {
-                                        mCodeWrite.writeInt(key);
-                                        mCodeWrite.writeInt(intDatas.get(key));
-                                    }
-
-                                    // write int RP attribute
-                                    count = intAPDatas.size();
-                                    mCodeWrite.writeByte((byte) count);
-                                    dataSet = intAPDatas.keySet();
-                                    for (Integer key : dataSet) {
-                                        mCodeWrite.writeInt(key);
-                                        mCodeWrite.writeInt(intAPDatas.get(key));
-                                    }
-
-                                    // write float attribute
-                                    count = floatDatas.size();
-                                    mCodeWrite.writeByte((byte) count);
-                                    dataSet = floatDatas.keySet();
-                                    for (Integer key : dataSet) {
-                                        mCodeWrite.writeInt(key);
-                                        mCodeWrite.writeInt(Float.floatToIntBits(floatDatas.get(key)));
-                                    }
-
-                                    // write float RP attribute
-                                    count = floatAPDatas.size();
-                                    mCodeWrite.writeByte((byte) count);
-                                    dataSet = floatAPDatas.keySet();
-                                    for (Integer key : dataSet) {
-                                        mCodeWrite.writeInt(key);
-                                        mCodeWrite.writeInt(Float.floatToIntBits(floatAPDatas.get(key)));
-                                    }
-
-                                    // write string attribute
-                                    count = strDatas.size();
-                                    mCodeWrite.writeByte((byte) count);
-                                    dataSet = strDatas.keySet();
-                                    for (Integer key : dataSet) {
-                                        mCodeWrite.writeInt(key);
-                                        mCodeWrite.writeInt(strDatas.get(key));
-                                    }
-
-                                    // write expr code attribute
-                                    count = codeDatas.size();
-                                    mCodeWrite.writeByte((byte) count);
-                                    dataSet = codeDatas.keySet();
-                                    for (Integer key : dataSet) {
-                                        mCodeWrite.writeInt(key);
-                                        mCodeWrite.writeInt(codeDatas.get(key));
-                                    }
-
-                                    // write user var
-                                    count = userVars.size();
-                                    mCodeWrite.writeByte((byte) count);
-                                    for (UserVarItem item : userVars) {
-                                        mCodeWrite.writeByte((byte)item.mType);
-                                        mCodeWrite.writeInt(item.mNameID);
-                                        mCodeWrite.writeInt(item.mValue);
-                                    }
+                                    //write to byte array
+                                    count = writeFile(intAPDatas, intDatas, floatDatas, floatAPDatas, strDatas,
+                                            codeDatas, userVars);
                                 } else {
                                     break;
                                 }
@@ -681,13 +633,13 @@ public class ViewCompiler implements ExprCompiler.Listener {
                 try {
                     byte[] nameByte = name.getBytes("UTF-8");
                     int nameSize = nameByte.length;
-                    mFile.writeShort(nameSize);
-                    mFile.write(nameByte);
+                    mMemByte.writeShort(nameSize);
+                    mMemByte.write(nameByte);
 
                     int size = code.size();
-                    mFile.writeShort(size);
+                    mMemByte.writeShort(size);
                     for (Byte b : code) {
-                        mFile.writeByte(b);
+                        mMemByte.writeByte(b);
                     }
 
                     mCodeTotalSize += nameSize + 2 + size + 2;
@@ -704,6 +656,75 @@ public class ViewCompiler implements ExprCompiler.Listener {
         }
 
         return ret;
+    }
+
+    private int writeFile(Map<Integer, Integer> intAPDatas, Map<Integer, Integer> intDatas,
+                          Map<Integer, Float> floatDatas, Map<Integer, Float> floatAPDatas, Map<Integer, Integer> strDatas,
+                          Map<Integer, Integer> codeDatas, List<UserVarItem> userVars) {
+        int count;
+        // write int attribute
+        count = intDatas.size();
+        mCodeWrite.writeByte((byte) count);
+        Set<Integer> dataSet = intDatas.keySet();
+        for (Integer key : dataSet) {
+            mCodeWrite.writeInt(key);
+            mCodeWrite.writeInt(intDatas.get(key));
+        }
+
+        // write int RP attribute
+        count = intAPDatas.size();
+        mCodeWrite.writeByte((byte) count);
+        dataSet = intAPDatas.keySet();
+        for (Integer key : dataSet) {
+            mCodeWrite.writeInt(key);
+            mCodeWrite.writeInt(intAPDatas.get(key));
+        }
+
+        // write float attribute
+        count = floatDatas.size();
+        mCodeWrite.writeByte((byte) count);
+        dataSet = floatDatas.keySet();
+        for (Integer key : dataSet) {
+            mCodeWrite.writeInt(key);
+            mCodeWrite.writeInt(Float.floatToIntBits(floatDatas.get(key)));
+        }
+
+        // write float RP attribute
+        count = floatAPDatas.size();
+        mCodeWrite.writeByte((byte) count);
+        dataSet = floatAPDatas.keySet();
+        for (Integer key : dataSet) {
+            mCodeWrite.writeInt(key);
+            mCodeWrite.writeInt(Float.floatToIntBits(floatAPDatas.get(key)));
+        }
+
+        // write string attribute
+        count = strDatas.size();
+        mCodeWrite.writeByte((byte) count);
+        dataSet = strDatas.keySet();
+        for (Integer key : dataSet) {
+            mCodeWrite.writeInt(key);
+            mCodeWrite.writeInt(strDatas.get(key));
+        }
+
+        // write expr code attribute
+        count = codeDatas.size();
+        mCodeWrite.writeByte((byte) count);
+        dataSet = codeDatas.keySet();
+        for (Integer key : dataSet) {
+            mCodeWrite.writeInt(key);
+            mCodeWrite.writeInt(codeDatas.get(key));
+        }
+
+        // write user var
+        count = userVars.size();
+        mCodeWrite.writeByte((byte) count);
+        for (UserVarItem item : userVars) {
+            mCodeWrite.writeByte((byte) item.mType);
+            mCodeWrite.writeInt(item.mNameID);
+            mCodeWrite.writeInt(item.mValue);
+        }
+        return count;
     }
 
     private boolean parseUserVar(List<UserVarItem> userVarItems, String strKey, String strValue) {

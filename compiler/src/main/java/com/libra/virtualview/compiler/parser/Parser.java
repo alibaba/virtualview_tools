@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -77,10 +77,16 @@ public abstract class  Parser {
 
         public int mExtra;
         public String mStrValue;
-        public int mIntValue;
+        private int mIntValue;
         public float mFloatValue;
 
-        public int mType;
+        
+        
+        public int getmIntValue() {
+			return mIntValue;
+		}
+
+		public int mType;
 
         public AttrItem() {
             reset();
@@ -89,6 +95,9 @@ public abstract class  Parser {
         public void reset() {
             mType = TYPE_int;
             mExtra = 0;
+            mStrValue = null;
+            mIntValue = 0;
+            mFloatValue = 0;
         }
 
         @Override

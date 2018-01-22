@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -228,7 +228,8 @@ public class Log {
     /** @hide */ @SuppressWarnings("unused")
     public static int println(int bufID,
                               int priority, String tag, String msg) {
-        System.out.printf("bufId: %d, priority: %d, TAG: %s, msg: %s\n", bufID, priority, tag, msg);
+//        System.out.printf("bufId: %d, priority: %d, TAG: %s, msg: %s\n", bufID, priority, tag, msg);
+    	System.out.println(msg);
         return 0;
     }
 

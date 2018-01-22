@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 Alibaba Group
+ * Copyright (c) 2018 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -82,8 +82,6 @@ public abstract class TextBaseParser extends ViewBaseParser {
                         value.setIntValue(TextBaseCommon.MIDDLE);
                     } else if (value.mStrValue.equals("end")) {
                         value.setIntValue(TextBaseCommon.END);
-                    } else if (value.mStrValue.equals("none")) {
-                        value.setIntValue(TextBaseCommon.NONE);
                     } else {
                         Log.e(TAG, "parse ellipsize error");
                         ret = CONVERT_RESULT_ERROR;
