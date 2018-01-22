@@ -24,3 +24,5 @@ local.properties
 #jcenterInstall.gradle
 #compilerJcenterDeploy.gradle
 #compilerJcenterInstall.gradle
+
+deploy_compiler.gradle
