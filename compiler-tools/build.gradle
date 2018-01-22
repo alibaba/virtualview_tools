@@ -50,9 +50,9 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-File deployConfig = rootProject.file('deploy_compiler.gradle')
+File deployConfig = rootProject.file('deploy.gradle')
 if (deployConfig.exists()) {
-    apply from: rootProject.file('deploy_compiler.gradle')
+    apply from: rootProject.file('deploy.gradle')
 }
 
 //清除上次的编译过的文件
