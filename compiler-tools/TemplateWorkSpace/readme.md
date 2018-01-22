@@ -1,51 +1,66 @@
-# 文件介绍
+### 使用说明
+
+#### 独立运行模式
+
+##### 文件介绍
+
+下载源码之后，可执行工具存放在目录 TemplateWorkSpace 里，包含以下几个文件/目录（或运行后产生）：
 
 | 文件                      | 作用                        |
 | ----------------------- | ------------------------- |
-| config.properties       | 配置组件ID、xml属性对应的value类型    |
-| templatelist.properties | 编译的vv模板文件列表               |
+| config.properties       | 配置组件 ID、xml 属性对应的 value 类型    |
+| templatelist.properties | 编译的模板文件列表               |
 | build                   | 二进制文件的输出目录                |
-| template                | xml的存放路径                  |
-| compiler.jar            | java代码编译后jar文件，执行xml的编译逻辑 |
+| template                | xml 的存放路径                  |
+| compiler.jar            | java 代码编译后 jar 文件，执行 xml 的编译逻辑 |
 | buildTemplate.sh        | 编译执行文件                    |
 
-# 如何运行
+##### 如何运行
 
-- 打开命令行 执行 sh buildTemplate.sh
-- 模板编译后的文件会输出到 build路径下
+- 打开命令行 执行 `sh buildTemplate.sh`
+- 模板编译后的文件会输出到 build 路径下
 
+##### 配置 config.properties
 
-
-# 配置config.properties
-
-- VIEW_ID_XXXX 
-  - 配置xml节点id
-  - 如配置VIEW_ID_FrameLayout=1，则xml节点中的<FrameLayout>在编译后会用数值1代替
-  - 节点配置以`VIEW_ID_`开头
-- property=ValueType
-  - 配置属性值的类型，配置对所有模板生效，不支持在1.xml和2.xml中对相同的属性用不同的ValueType解析
+- `VIEW_ID_XXXX`
+  - 配置 xml 节点 id
+  - 如配置 `VIEW_ID_FrameLayout=1`，则 xml 节点中的 `<FrameLayout>` 在编译后会用数值1代替
+  - 节点配置以 **`VIEW_ID_`** 开头
+- `property=ValueType`
+  - 配置属性值的类型，配置对所有模板生效，不支持在 1.xml 和 2.xml 中对相同的属性用不同的 ValueType 解析
   - 目前已经支持
-    - 常规类型：String(默认，不需要配置)、Float、Color、Expr、Number、Int、Bool
-    - 特殊类型Flag、Type、Align、LayoutWidthHeight、TextStyle、DataMode、Visibility
-    - 枚举类型Enum\<name:value,……\>
-  - 枚举说明：
-    - 如配置flexDirection=Enum\<row:0,row-reverse:1,column:2,column-reverse:3\>
-    - 在解析属性是配置row直接转化成int:0,row-reverse转成int:1
-- DEFAULT_PROPERTY_XXXX
+    - 常规类型：`String`(默认，不需要配置)、`Float`、`Color`、`Expr`、`Number`、`Int`、`Bool`
+    - 特殊类型 `Flag`、`Type`、`Align`、`LayoutWidthHeight`、`TextStyle`、`DataMode`、`Visibility`
+    - 枚举类型 `Enum<name:value,……>`
+	  - 枚举说明：
+	    - 如配置 `flexDirection=Enum<row:0,row-reverse:1,column:2,column-reverse:3>`
+	    - 在解析属性是配置 `row` 直接转化成 `int:0`，`row-reverse` 转成 `int:1`
+- `DEFAULT_PROPERTY_XXXX`
   - 为了兼容就模板的编译，写的强制在二进制中写入一些属性类型定义，可以忽略
 
+##### 配置 templatelist.properties
 
+- 格式 `xmlFileName=outFileName,Version[,platform]`
+  - `xmlFileName` 标识 template 目录下需要编译的 xml 文件名建议不带 `.xml` 后缀，目前做了兼容
+  - `outFileName` 输出到 build 目录下的 `.out` 文件名
+  - `Version` 表示 xml 编译后的版本号
+  - `platform` 同时兼容 iOS 和 android 时不写，可填的值为 `android` 和`iphone`
 
+##### xml 文件模板编写
 
+- 和以前的方式一样，不需要额外写 Java 代码，只需要对新增的属性在config.properties 中配置 ValueType
 
-# 配置templatelist.properties
+#### 接口模式
 
-- 格式xmlFileName=outFileName,Version[,platform]
-  - xmlFileName标识template目录下需要编译的xml文件名建议不带`.xml`后缀，目前做了兼容
-  - outFileName输出到build目录下的`.out`文件名
-  - xml编译后的版本号
-  - platform同时兼容iOS和android时不写，可填的值为`android`和`iphone`
+除了直接使用命令行执行工具，还可以基于此搭建完整成熟的模板工具，它可以是个客户端，也可以是个后端服务，或者是个插件，所以需要提供接口模式供宿主程序调用。
 
-# xml文件模板编写
-
-- 和以前的方式一样，不需要额外写java代码，只需要对新增的属性在config.propertiesz中配置ValueType
+```
+//初始化构建对象
+ViewCompilerApi viewCompiler = new ViewCompilerApi();
+//设置配置文件加载器
+viewCompiler.setConfigLoader(new LocalConfigLoader());
+//读取模板数据
+FileInputStream fis = new FileInputStream(rootDir);
+//调用接口，传入必备参数，此时不区分平台，如果要区分平台，使用方单独编译即可
+byte[] result = viewCompiler.compile(fis, "icon", 13);
+```

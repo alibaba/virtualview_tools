@@ -2,39 +2,81 @@
 
 [English Document](README.md)
 
-本项目是 VirtualView 工程的配套工具项目，它主要用来编译 XML 模板，包含三个模块：
-
-+ virtual-common：定义基础的工具类、常量；在 virtualview 和 compiler 模块里均要引入依赖；
-+ compiler：模板编译工具，定义了基础组件的解析器、表达式解析器，甚至自定义组件解析器，用来将 XML 模板编译成二进制数据；它只用来开发编译工具，组件渲染运行不需要依赖它；
-+ compiler-tools：基于 common 和 compiler 开发的编译工具，可在项目中运行，也可以导出 jar 包来运行；其中导出的 jar 包可用于进一步开发 IDE 的插件；目前在使用的时候直接在 IntelliJ 中运行编译；
-
-因为组件模板与平台无关，因此编译器工具与平台无关，编译结果可运行到 Android，iOS 的宿主程序里。
+本项目是 VirtualView 工程的配套工具项目，它主要用来编译 XML 模板。
 
 # 使用说明
 
-在完善开发工具之前，目前是直接使用 IntelliJ 里运行项目编译模板的，做几个规范说明：
+#### 独立运行模式
 
-### 代码规范
+##### 文件介绍
 
-+ 自定义业务基础组件，常量定义可以另起一个在 biz-common 模块的来定义，用来提供给模板解析器及运行时 sdk 使用；
-+ 自定义业务基础组件，解析器定义在 compiler 模块的 `com.libra.virtualview.compiler.parser.biz` 包下；
-+ Tangram 业务组件模板编写，存放到 compiler-tools 模块的 template 文件夹下；
+下载源码之后，可执行工具存放在目录 TemplateWorkSpace 里，包含以下几个文件/目录（或运行后产生）：
 
-### 通过模块 compiler-tools 添加、编译新业务组件
+| 文件                      | 作用                        |
+| ----------------------- | ------------------------- |
+| config.properties       | 配置组件 ID、xml 属性对应的 value 类型    |
+| templatelist.properties | 编译的模板文件列表               |
+| build                   | 二进制文件的输出目录                |
+| template                | xml 的存放路径                  |
+| compiler.jar            | java 代码编译后 jar 文件，执行 xml 的编译逻辑 |
+| buildTemplate.sh        | 编译执行文件                    |
 
-+ 如果有新的自定义业务组件，先编写对应的解析器，参考这里的[文档](http://tangram.pingguohe.net/docs/android/add-a-custom-element)
-+ 添加新的业务组件的模板 XML 到 template 文件夹下；
-+ 在 `VirtualViewCompileTool` 的 `RESOURCE_LIST` 添加一条新的记录，有三个参数：
-	+ type：组件名称，是业务开发时定义的；
-	+ name：组件模板的文件名；
-	+ version：**组件的版本号，它会被编译到组件的生成文件里，客户端读取组件的版本号，应该从模板数据里解析获取；版本号从 1 开始，每次要到线上做发布变更加 1，开发阶段不需要加 1；**
-+ 运行工程，输出结果在 template 文件夹的 build 目录下，输入文件的文件名都是以上述 type 为基础，转换大小写、替换分隔符、加后缀来命名，包含四部分（每一份 XML 文件编译之后都会生成四份内容存到对应的目录下）：
-	+ out目录：XML 模板编译成二进制数据的文件，其他内容都是以此为基础生成，上传到 cdn，通过模板管理后台下发的也是这里的文件；
-	+ java目录：XML 模板编译成二进制数据之后的 Java 字节数组形式，可以直接拷贝到 Android 开发工程里使用，作为打底数据；
-	+ sign目录：out 格式文件的 md5 码，供模板管理平台下发模板给客户端校验使用；
-	+ txt目录：XML 模板编译成二进制数据之后的十六进制字符串形式，转换成二进制数据就是 java 目录下的字节数组；
+##### 如何运行
 
-这样就编译好了 XML 模板文件，开发阶段，可以直接拷贝 out 文件或者 java 文件到客户端工程里使用；
+- 打开命令行 执行 `sh buildTemplate.sh`
+- 模板编译后的文件会输出到 build 路径下
+
+##### 配置 config.properties
+
+- `VIEW_ID_XXXX`
+  - 配置 xml 节点 id
+  - 如配置 `VIEW_ID_FrameLayout=1`，则 xml 节点中的 `<FrameLayout>` 在编译后会用数值1代替
+  - 节点配置以 **`VIEW_ID_`** 开头
+- `property=ValueType`
+  - 配置属性值的类型，配置对所有模板生效，不支持在 1.xml 和 2.xml 中对相同的属性用不同的 ValueType 解析
+  - 目前已经支持
+    - 常规类型：`String`(默认，不需要配置)、`Float`、`Color`、`Expr`、`Number`、`Int`、`Bool`
+    - 特殊类型 `Flag`、`Type`、`Align`、`LayoutWidthHeight`、`TextStyle`、`DataMode`、`Visibility`
+    - 枚举类型 `Enum<name:value,……>`
+	  - 枚举说明：
+	    - 如配置 `flexDirection=Enum<row:0,row-reverse:1,column:2,column-reverse:3>`
+	    - 在解析属性是配置 `row` 直接转化成 `int:0`，`row-reverse` 转成 `int:1`
+- `DEFAULT_PROPERTY_XXXX`
+  - 为了兼容就模板的编译，写的强制在二进制中写入一些属性类型定义，可以忽略
+
+##### 配置 templatelist.properties
+
+- 格式 `xmlFileName=outFileName,Version[,platform]`
+  - `xmlFileName` 标识 template 目录下需要编译的 xml 文件名建议不带 `.xml` 后缀，目前做了兼容
+  - `outFileName` 输出到 build 目录下的 `.out` 文件名
+  - `Version` 表示 xml 编译后的版本号
+  - `platform` 同时兼容 iOS 和 android 时不写，可填的值为 `android` 和`iphone`
+
+##### xml 文件模板编写
+
+- 和以前的方式一样，不需要额外写 Java 代码，只需要对新增的属性在config.properties 中配置 ValueType
+
+##### 构建产物
+
+- out目录：XML 模板编译成二进制数据的文件，其他内容都是以此为基础生成，上传到 cdn，通过模板管理后台下发的也是这里的文件；
+- java目录：XML 模板编译成二进制数据之后的 Java 字节数组形式，可以直接拷贝到 Android 开发工程里使用，作为打底数据；
+- sign目录：out 格式文件的 md5 码，供模板管理平台下发模板给客户端校验使用；
+- txt目录：XML 模板编译成二进制数据之后的十六进制字符串形式，转换成二进制数据就是 java 目录下的字节数组；
+
+#### 接口模式
+
+除了直接使用命令行执行工具，还可以基于此搭建完整成熟的模板工具，它可以是个客户端，也可以是个后端服务，或者是个插件，所以需要提供接口模式供宿主程序调用。
+
+```
+//初始化构建对象
+ViewCompilerApi viewCompiler = new ViewCompilerApi();
+//设置配置文件加载器
+viewCompiler.setConfigLoader(new LocalConfigLoader());
+//读取模板数据
+FileInputStream fis = new FileInputStream(rootDir);
+//调用接口，传入必备参数，此时不区分平台，如果要区分平台，使用方单独编译即可
+byte[] result = viewCompiler.compile(fis, "icon", 13);
+```
 
 # 贡献代码
 
