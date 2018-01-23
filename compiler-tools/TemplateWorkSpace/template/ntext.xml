@@ -327,4 +327,12 @@
             supportHTMLStyle="true"
             layoutWidth="match_parent"
             layoutHeight="wrap_content" />
+	<NText
+			text="bindTextStyle"
+			textSize="12"
+			textColor="#333333"
+			layoutWidth="match_parent"
+			layoutHeight="wrap_content"
+			textStyle="${style.text-style}"
+			/>
 </VHLayout>

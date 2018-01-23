@@ -15,6 +15,7 @@ virtual-common/build/
 compiler/build/
 compiler/bin/
 compiler-tools/bin/
+compiler-tools/build1/
 compiler-tools/template/build/
 compiler-tools/template/*.txt
 compiler-tools/compiler-tools/
