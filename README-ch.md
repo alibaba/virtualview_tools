@@ -70,11 +70,11 @@
 ```
 //初始化构建对象
 ViewCompilerApi viewCompiler = new ViewCompilerApi();
-//设置配置文件加载器
+//设置配置文件加载器，需要实现一个自己的 ConfigLoader，这里的 LocalConfigLoader 是示例
 viewCompiler.setConfigLoader(new LocalConfigLoader());
 //读取模板数据
 FileInputStream fis = new FileInputStream(rootDir);
-//调用接口，传入必备参数，此时不区分平台，如果要区分平台，使用方单独编译即可
+//调用接口，传入必备参数，参数二是模板名称类型，参数三是模板版本号，此时不区分平台，如果要区分平台，使用方单独编译即可
 byte[] result = viewCompiler.compile(fis, "icon", 13);
 ```
 
