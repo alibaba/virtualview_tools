@@ -24,18 +24,15 @@
 
 package com.libra.virtualview.compiler.valueparser;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.swing.JOptionPane;
-import com.sun.tools.javac.util.Assert;
 import com.libra.expr.compiler.ExprCompiler;
-import com.libra.virtualview.compiler.ConfigParser;
 import com.libra.virtualview.compiler.ExprCodeStore;
 import com.libra.virtualview.compiler.alert.AlertView;
 import com.libra.virtualview.compiler.config.CompilerConfig;
 import com.libra.virtualview.compiler.parser.Parser.AttrItem;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ValueParserCenter {
 
@@ -67,11 +64,8 @@ public class ValueParserCenter {
 				e1.printStackTrace();
 				
 				String msg = "valueParser create error:" + e.getValue() + " check class:" + clsName;
-				 AlertView.alert(msg);
 				 System.out.println("error:" + msg);
-				 
-				 Assert.check(false);
-				 
+				 AlertView.alert(msg);
 				 return false;
 			}
 		}

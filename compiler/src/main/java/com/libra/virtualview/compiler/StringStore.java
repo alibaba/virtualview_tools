@@ -28,10 +28,7 @@ import com.libra.Log;
 import com.libra.TextUtils;
 import com.libra.expr.common.StringSupport;
 import com.libra.virtualview.common.StringBase;
-import com.sun.tools.javac.util.Assert;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -63,8 +60,10 @@ public class StringStore extends StringBase implements StringSupport {
             mSysString2Index.put(SYS_KEYS[i], SYS_KEYS[i].hashCode());
             mSysIndex2Sys.put(SYS_KEYS[i].hashCode(), SYS_KEYS[i]);
         }
-        Assert.check(mSysString2Index.size() == SYS_KEYS.length);
-        Assert.check(mSysIndex2Sys.size() == SYS_KEYS.length);
+        Assert.check(mSysString2Index.size() == SYS_KEYS.length,
+                "1 system string index's length != system string's length");
+        Assert.check(mSysIndex2Sys.size() == SYS_KEYS.length,
+                "2 system string index's length != system string's length");
         reset();
     }
 
@@ -134,14 +133,16 @@ public class StringStore extends StringBase implements StringSupport {
             if (0 == ret && create) {
                 ret = str.hashCode();
                 
-                Assert.check(!(mIndex2String.containsKey(ret) && !str.equals(mIndex2String.get(ret))));
+                Assert.check(!(mIndex2String.containsKey(ret) && !str.equals(mIndex2String.get(ret))),
+                        "hash code conflicts, see string " + str);
                 
                 mString2Index.put(str, ret);
                 mIndex2String.put(ret, str);
                 mSingleOutputString2Index.put(str, ret);
                 mSingleOutputIndex2String.put(ret, str);
 
-                Assert.check(!mSysIndex2Sys.containsKey(ret));
+                Assert.check(!mSysIndex2Sys.containsKey(ret),
+                        "string's hash code conflicts with system key");
             }
         }
 

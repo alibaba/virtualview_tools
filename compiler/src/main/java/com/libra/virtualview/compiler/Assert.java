@@ -22,17 +22,18 @@
  * SOFTWARE.
  */
 
-package com.libra.virtualview.compiler.alert;
+package com.libra.virtualview.compiler;
 
-import com.libra.virtualview.compiler.Assert;
+/**
+ * Created by longerian on 2018/1/23.
+ */
+public class Assert {
 
-import javax.swing.JOptionPane;
+    public static void check(boolean test, String message) {
+        if (!test) {
+            System.out.println(message);
+            System.exit(1);
+        }
+    }
 
-public class AlertView {
-	public static void alert(String msg){
-		System.out.println(msg);
-		
-		JOptionPane.showMessageDialog(null, msg);
-		Assert.check(false, msg);
-	}
 }
