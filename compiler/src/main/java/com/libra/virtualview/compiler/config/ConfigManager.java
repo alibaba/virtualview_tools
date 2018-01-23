@@ -43,6 +43,11 @@ public class ConfigManager {
         sConfigLoader = configLoader;
     }
 
+    public static void clear() {
+        sConfigLoader = null;
+        staticConfig = null;
+    }
+
     public static CompilerConfig loadConfigFile() {
         if (staticConfig != null) {
             return staticConfig;
