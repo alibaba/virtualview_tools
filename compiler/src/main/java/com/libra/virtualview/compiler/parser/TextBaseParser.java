@@ -27,6 +27,7 @@ package com.libra.virtualview.compiler.parser;
 import com.libra.TextUtils;
 import com.libra.Log;
 
+import com.libra.Utils;
 import com.libra.virtualview.common.StringBase;
 import com.libra.virtualview.common.TextBaseCommon;
 
@@ -100,25 +101,29 @@ public abstract class TextBaseParser extends ViewBaseParser {
     protected static boolean parseTextStyle(AttrItem item) {
         boolean ret = true;
 
-        int value = 0;
-        String[] strs = item.mStrValue.split("\\|");
-        for (String str : strs) {
-            str = str.trim();
-            if (TextUtils.equals("bold", str)) {
-                value |= TextBaseCommon.BOLD;
-            } else if (TextUtils.equals("italic", str)) {
-                value |= TextBaseCommon.ITALIC;
-            } else if (TextUtils.equals("strike", str)) {
-                value |= TextBaseCommon.STRIKE;
-            } else {
-                Log.e(TAG, "invalidate value:" + str);
-                ret = false;
-                break;
+        if (Utils.isEL(item.mStrValue)) {
+            item.setStr(item.mStrValue);
+        } else {
+            int value = 0;
+            String[] strs = item.mStrValue.split("\\|");
+            for (String str : strs) {
+                str = str.trim();
+                if (TextUtils.equals("bold", str)) {
+                    value |= TextBaseCommon.BOLD;
+                } else if (TextUtils.equals("italic", str)) {
+                    value |= TextBaseCommon.ITALIC;
+                } else if (TextUtils.equals("strike", str)) {
+                    value |= TextBaseCommon.STRIKE;
+                } else {
+                    Log.e(TAG, "invalidate value:" + str);
+                    ret = false;
+                    break;
+                }
             }
-        }
 
-        if (ret) {
-            item.setIntValue(value);
+            if (ret) {
+                item.setIntValue(value);
+            }
         }
 
         return ret;
