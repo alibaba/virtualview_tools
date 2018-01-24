@@ -577,6 +577,8 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                             String value = parser.getAttributeValue(i);
                                             //EL or String
                                             attrItem.setStr(value);
+                                            id = mStringStore.getStringId(value);
+                                            strDatas.put(key2, id);
 
                                             ret = true;
                                             Log.e(TAG, "getString2 :" + parser.getName() + "  attribute name:" + parser.getAttributeName(i) + "   value:" + parser.getAttributeValue(i));
