@@ -24,16 +24,36 @@
 
 package com.libra.virtualview.compiler.config;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Created by longerian on 2018/1/22.
  */
 public class LocalConfigLoader implements ConfigManager.ConfigLoader {
+
+    private boolean buildJar;
+
+    public LocalConfigLoader(Boolean buildJar) {
+        this.buildJar = buildJar;
+    }
+
     @Override
     public InputStream getConfigResource() {
         CompilerConfig config = new CompilerConfig();
-        InputStream inputStream = config.getClass().getClassLoader().getResourceAsStream("config.properties");
+        URL u = config.getClass().getClassLoader().getResource("");
+        String path = u.getPath();
+        if (buildJar) {
+            path = path + "../";
+        }
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(path + "config.properties");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         return inputStream;
     }
 }
