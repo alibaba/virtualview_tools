@@ -440,9 +440,7 @@ public class ViewCompiler implements ExprCompiler.Listener {
             mCodeTotalSize = 4;
             ViewBaseParser.AttrItem attrItem = new ViewBaseParser.AttrItem();
             try {
-                XmlPullParserFactory factory = XmlPullParserFactory.newInstance(
-                        System.getProperty(XmlPullParserFactory.PROPERTY_NAME),
-                        Thread.currentThread().getContextClassLoader().getClass());
+                XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                 XmlPullParser parser = factory.newPullParser();
                 parser.setInput(is, "UTF-8");
                 mBuilderStack.clear();
