@@ -24,16 +24,11 @@
 
 package com.libra.virtualview.compiler.alert;
 
-import javax.swing.JOptionPane;
+/**
+ * Created by longerian on 2018/1/24.
+ */
+public class Switch {
 
-public class AlertView {
-	public static void alert(String msg){
-		if (Switch.shouldAlert) {
-			System.out.println(msg);
-			JOptionPane.showMessageDialog(null, msg);
-			Assert.check(false, msg);
-		} else {
-			throw new RuntimeException(msg);
-		}
-	}
+    public static boolean shouldAlert = false;
+
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.libra.virtualview.compiler;
+package com.libra.virtualview.compiler.alert;
 
 /**
  * Created by longerian on 2018/1/23.
@@ -31,8 +31,12 @@ public class Assert {
 
     public static void check(boolean test, String message) {
         if (!test) {
-            System.out.println(message);
-            System.exit(1);
+            if (Switch.shouldAlert) {
+                System.out.println(message);
+                System.exit(1);
+            } else {
+                throw new RuntimeException(message);
+            }
         }
     }
 

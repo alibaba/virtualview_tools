@@ -25,6 +25,7 @@
 package com.libra.virtualview.tool;
 
 import com.libra.virtualview.compiler.ViewCompiler;
+import com.libra.virtualview.compiler.alert.Switch;
 import com.libra.virtualview.compiler.parser.ScrollerParser;
 import com.libra.virtualview.compiler.parser.biz.*;
 
@@ -59,6 +60,7 @@ public class VirtualViewCompileTool {
     }
 
     static private void compileInProject(Boolean buildJar) {
+        Switch.shouldAlert = true;
         VirtualViewCompileTool t = new VirtualViewCompileTool();
         URL u = t.getClass().getClassLoader().getResource("");
         String path = u.getPath();
