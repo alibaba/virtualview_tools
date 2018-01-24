@@ -494,72 +494,10 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                     int key = mStringStore.getStringId(strKey, false);
                                     if (key != 0) {
                                         String value = parser.getAttributeValue(i);
-
-                                        attrItem.setStr(value);
-
-//                                        Log.d(TAG, "compile prop key:" + strKey + "  value:" + value);
-                                        // this and parent convert attribute, layout
-                                        int convertResult = viewParser.convertAttribute(key, attrItem);
-                                        if (convertResult == -1) {
-                                            AlertView.alert("FileName= " + name + " VALUE ERROR:key=" + strKey + " value=" + attrItem.mStrValue);
-                                        }
-                                        if ((ViewBaseParser.CONVERT_RESULT_FAILED == convertResult)) {
-                                            if (null != parentParser) {
-//                                                Log.d(TAG, "compile prop 1");
-                                                convertResult = parentParser.convertAttribute(key, attrItem);
-                                            } else {
-//                                                Log.d(TAG, "compile prop 2");
-                                                // root width, height
-                                                convertResult = mRootLayoutParser.convertAttribute(key, attrItem);
-                                            }
-                                        }
-
-                                        if (ViewBaseParser.CONVERT_RESULT_ERROR == convertResult) {
-                                            ret = false;
-                                            Log.e(TAG, "parse attr error..." + "  attribute name:" + parser.getAttributeName(i) + "   value:" + parser.getAttributeValue(i));
+                                        boolean result = convertAttribute(name, parser, attrItem, parentParser, viewParser, key, strKey, value,
+                                                intDatas, intAPDatas, floatDatas, floatAPDatas, strDatas, codeDatas);
+                                        if (!result) {
                                             break;
-                                        } else if (ViewBaseParser.CONVERT_RESULT_OK == convertResult) {
-//                                            Log.d(TAG, "compile result:" + attrItem);
-
-                                            // write value now!
-                                            if (ViewBaseParser.AttrItem.TYPE_int == attrItem.mType) {
-                                                if (Parser.AttrItem.EXTRA_RP == attrItem.mExtra) {
-                                                    intAPDatas.put(key, attrItem.getmIntValue());
-                                                } else {
-                                                    intDatas.put(key, attrItem.getmIntValue());
-                                                }
-                                            } else if (ViewBaseParser.AttrItem.TYPE_float == attrItem.mType) {
-                                                if (Parser.AttrItem.EXTRA_RP == attrItem.mExtra) {
-                                                    floatAPDatas.put(key, attrItem.mFloatValue);
-                                                } else {
-                                                    floatDatas.put(key, attrItem.mFloatValue);
-                                                }
-                                            } else if (ViewBaseParser.AttrItem.TYPE_code == attrItem.mType) {
-                                                codeDatas.put(key, attrItem.getmIntValue());
-                                            } else if (ViewBaseParser.AttrItem.TYPE_string == attrItem.mType) {
-                                                // string
-                                                id = mStringStore.getStringId(value);
-                                                if (id != 0) {
-                                                    // write string value
-                                                    strDatas.put(key, id);
-                                                } else {
-                                                    ret = false;
-                                                    Log.e(TAG, "getString3 error:" + parser.getName() + "  attribute name:" + parser.getAttributeName(i) + "   value:" + parser.getAttributeValue(i));
-                                                    break;
-                                                }
-                                            }
-                                        } else {
-                                            // string
-                                            id = mStringStore.getStringId(value);
-                                            System.out.println("==ABC " + viewParser.getClass().getName() + "=====" + strKey + " file=" + name);
-                                            if (id != 0) {
-                                                // write string value
-                                                strDatas.put(key, id);
-                                            } else {
-                                                ret = false;
-                                                Log.e(TAG, "getString3 error:" + parser.getName() + "  attribute name:" + parser.getAttributeName(i) + "   value:" + parser.getAttributeValue(i));
-                                                break;
-                                            }
                                         }
                                     } else {
                                         if (strKey.startsWith("var_")) {
@@ -569,20 +507,19 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                                 break;
                                             }
                                         } else {
-                                            //新增的key 按照string处理
+                                            //store new key as string
                                             int key2 = mStringStore.getStringId(strKey, true);
                                             if (key2 == 0) {
                                                 AlertView.alert("custom key error:" + strKey);
                                             }
                                             String value = parser.getAttributeValue(i);
-                                            //EL or String
-                                            attrItem.setStr(value);
-                                            id = mStringStore.getStringId(value);
-                                            strDatas.put(key2, id);
-
+                                            boolean result = convertAttribute(name, parser, attrItem, parentParser, viewParser, key2, strKey, value,
+                                                    intDatas, intAPDatas, floatDatas, floatAPDatas, strDatas, codeDatas);
+                                            if (!result) {
+                                                break;
+                                            }
                                             ret = true;
                                             Log.e(TAG, "getString2 :" + parser.getName() + "  attribute name:" + parser.getAttributeName(i) + "   value:" + parser.getAttributeValue(i));
-                                            break;
                                         }
                                     }
                                 }
@@ -770,6 +707,75 @@ public class ViewCompiler implements ExprCompiler.Listener {
             }
         }
 
+        return ret;
+    }
+
+    private boolean convertAttribute(String name, XmlPullParser parser, Parser.AttrItem attrItem, Parser parentParser, Parser viewParser, int key, String strKey, String value,
+                                     Map<Integer, Integer> intDatas,
+                                     Map<Integer, Integer> intAPDatas,
+                                     Map<Integer, Float> floatDatas,
+                                     Map<Integer, Float> floatAPDatas,
+                                     Map<Integer, Integer> strDatas,
+                                     Map<Integer, Integer> codeDatas) {
+        boolean ret = true;
+        int id = 0;
+        attrItem.setStr(value);
+        // this and parent convert attribute, layout
+        int convertResult = viewParser.convertAttribute(key, attrItem);
+        if (convertResult == -1) {
+            AlertView.alert("FileName= " + name + " VALUE ERROR:key=" + strKey + " value=" + attrItem.mStrValue);
+        }
+        if ((ViewBaseParser.CONVERT_RESULT_FAILED == convertResult)) {
+            if (null != parentParser) {
+                convertResult = parentParser.convertAttribute(key, attrItem);
+            } else {
+                // root width, height
+                convertResult = mRootLayoutParser.convertAttribute(key, attrItem);
+            }
+        }
+
+        if (ViewBaseParser.CONVERT_RESULT_ERROR == convertResult) {
+            ret = false;
+            Log.e(TAG, "parse attr error..." + "  attribute name:" + strKey + "   value:" + value);
+        } else if (ViewBaseParser.CONVERT_RESULT_OK == convertResult) {
+            // write value now!
+            if (ViewBaseParser.AttrItem.TYPE_int == attrItem.mType) {
+                if (Parser.AttrItem.EXTRA_RP == attrItem.mExtra) {
+                    intAPDatas.put(key, attrItem.getmIntValue());
+                } else {
+                    intDatas.put(key, attrItem.getmIntValue());
+                }
+            } else if (ViewBaseParser.AttrItem.TYPE_float == attrItem.mType) {
+                if (Parser.AttrItem.EXTRA_RP == attrItem.mExtra) {
+                    floatAPDatas.put(key, attrItem.mFloatValue);
+                } else {
+                    floatDatas.put(key, attrItem.mFloatValue);
+                }
+            } else if (ViewBaseParser.AttrItem.TYPE_code == attrItem.mType) {
+                codeDatas.put(key, attrItem.getmIntValue());
+            } else if (ViewBaseParser.AttrItem.TYPE_string == attrItem.mType) {
+                // string
+                id = mStringStore.getStringId(value);
+                if (id != 0) {
+                    // write string value
+                    strDatas.put(key, id);
+                } else {
+                    ret = false;
+                    Log.e(TAG, "getString3 error:" + parser.getName() + "  attribute name:" + strKey + "   value:" + value);
+                }
+            }
+        } else {
+            // string
+            id = mStringStore.getStringId(value);
+            System.out.println("==ABC " + viewParser.getClass().getName() + "=====" + strKey + " file=" + name);
+            if (id != 0) {
+                // write string value
+                strDatas.put(key, id);
+            } else {
+                ret = false;
+                Log.e(TAG, "getString3 error:" + parser.getName() + "  attribute name:" + strKey + "   value:" + value);
+            }
+        }
         return ret;
     }
 
