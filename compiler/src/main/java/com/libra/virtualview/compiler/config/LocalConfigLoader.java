@@ -45,9 +45,6 @@ public class LocalConfigLoader implements ConfigManager.ConfigLoader {
         CompilerConfig config = new CompilerConfig();
         URL u = config.getClass().getClassLoader().getResource("");
         String path = u.getPath();
-        if (buildJar) {
-            path = path + "../";
-        }
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream(path + "config.properties");

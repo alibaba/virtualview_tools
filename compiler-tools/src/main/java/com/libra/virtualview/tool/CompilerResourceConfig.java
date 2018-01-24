@@ -46,10 +46,7 @@ public class CompilerResourceConfig {
 		ConfigManager.setConfigLoader(new LocalConfigLoader(buildJar));
 		VirtualViewCompileTool t = new VirtualViewCompileTool();
 		URL u = t.getClass().getClassLoader().getResource("");
-    	String path = u.getPath();
-		if (buildJar) {
-			path = path + "../";
-		}
+    		String path = u.getPath();
 		File file = new File(path + "/templatelist.properties");
 		
 		Properties prop = new Properties();
