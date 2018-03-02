@@ -75,5 +75,5 @@ else:
 
 print 'start activity to your device to reload preview'
 
-os.system('adb shell am start -n %s -e name %s path %s --activity-single-top' %(activity, template, templateFile))
+os.system('adb shell am start -n %s -e name %s -e path %s --activity-single-top' %(activity, template, dest))
 
