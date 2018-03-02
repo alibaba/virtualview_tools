@@ -27,7 +27,6 @@
         flag="flag_exposure|flag_clickable"
         action="action"
         orientation="V"
-        gravity="v_center"
         layoutWidth="wrap_content"
         layoutHeight="wrap_content"
         paddingTop="10"

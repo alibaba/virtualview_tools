@@ -54,6 +54,7 @@
 
     <Slider
             dataTag="${items}"
+			span="10rp"
             orientation="H"
             itemWidth="227rp"
             layoutWidth="match_parent"
