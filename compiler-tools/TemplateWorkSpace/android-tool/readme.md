@@ -17,12 +17,18 @@
 + 推送编译后的 .out 文件到手机存储目录下：
 
 #模板推送到手机存储的路径
+
+```
 [path]
 target = /sdcard/com.tmall.wireless.virtualviewdemo/virtualview/
+```
 
 + 预览app的预览界面
+
+```
 [preview]
 activity = com.tmall.wireless.virtualviewdemo.debug/com.tmall.wireless.virtualviewdemo.PreviewActivity
+```
 
 以上默认值都是基于 VirtualView-Android 的 [demo](https://github.com/alibaba/Virtualview-Android/) 里配置的，可以自行迁移 demo 代码到自己的 app 环境中进行预览。
 
