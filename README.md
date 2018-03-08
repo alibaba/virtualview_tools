@@ -32,6 +32,7 @@ Download the source code, the executable is located at folder `TemplateWorkSpace
   - Define the widget's id, User's custom widget's should start from 1000;
   - For example, `VIEW_ID_FrameLayout=1` means the tag `<FrameLayout>` in XML will be compiled to number 1;
   - The property name in should start with **`VIEW_ID_`**;
+  - **Widget's Id value from 1 t0 1000 are reserved for system, so custom widget's id should be assigned start 1001**;
 - `property=ValueType`
   - Define the attribute's value type, which decide how to parse and compile original value into a compiled data in.
   - Currently supported defination is:
