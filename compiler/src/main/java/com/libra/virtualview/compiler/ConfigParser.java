@@ -104,6 +104,10 @@ public class ConfigParser extends Parser {
         return i;
     }
 
+    public boolean supportNameSpace(String nameSpace){
+    	return this.getValueParserCenter().supportParser(nameSpace);
+    }
+    
     @Override
     public int convertAttribute(int key, AttrItem value) {
         boolean b = this.getValueParserCenter().parseAttribute(key, value, this.mExprCompiler, this.mExprCodeStore);

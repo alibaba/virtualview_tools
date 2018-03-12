@@ -141,6 +141,10 @@ public abstract class  Parser {
         }
     }
 
+    public boolean supportNameSpace(String nameSpace){
+    	return false;
+    }
+
     public abstract int convertAttribute(int key, AttrItem value);
 
     // only parse integer
