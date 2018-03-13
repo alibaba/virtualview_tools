@@ -40,6 +40,8 @@
     <NFrameLayout
             layoutWidth="match_parent"
             layoutHeight="200"
+            background="#88ff00"
+
     >
         <VGraph
                 layoutWidth="wrap_content"
