@@ -491,7 +491,14 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                 int count = parser.getAttributeCount();
                                 for (int i = 0; i < count; ++i) {
                                     String strKey = parser.getAttributeName(i);
-                                    int key = mStringStore.getStringId(strKey, false);
+                                    
+                                    int key = 0;
+                                    String nameSpace = parser.getName() +  "." + strKey;
+                                    if(viewParser.supportNameSpace(nameSpace)){
+                                    	key = mStringStore.getStringId(nameSpace, true);
+                                    }else{
+                                    	key = mStringStore.getStringId(strKey, false);
+                                    }
                                     if (key != 0) {
                                         String value = parser.getAttributeValue(i);
                                         boolean result = convertAttribute(name, parser, attrItem, parentParser, viewParser, key, strKey, value,

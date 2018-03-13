@@ -73,6 +73,11 @@ public class ValueParserCenter {
 		return true;
 	}
 	
+	public boolean supportParser(String nameSpace){
+		BaseValueParser p = parserClassMap.get(nameSpace.hashCode());
+		return p!=null;
+	}
+	
 	public boolean parseAttribute(int key, AttrItem item,ExprCompiler exprCompiler,ExprCodeStore mExprCodeStore){
 		BaseValueParser p = parserClassMap.get(key);
 		if(p!=null){
