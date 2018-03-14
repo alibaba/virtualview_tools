@@ -145,6 +145,10 @@ public abstract class  Parser {
     	return false;
     }
 
+    public  int convertAttribute(int nameSpaeKey,int key, AttrItem value){
+    	return -1;
+    }
+    
     public abstract int convertAttribute(int key, AttrItem value);
 
     // only parse integer

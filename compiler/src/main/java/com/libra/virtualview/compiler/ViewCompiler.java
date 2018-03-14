@@ -493,15 +493,16 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                     String strKey = parser.getAttributeName(i);
                                     
                                     int key = 0;
-                                    String nameSpace = parser.getName() +  "." + strKey;
-                                    if(viewParser.supportNameSpace(nameSpace)){
-                                    	key = mStringStore.getStringId(nameSpace, true);
-                                    }else{
-                                    	key = mStringStore.getStringId(strKey, false);
+                                    int nameSpaceKey = 0;
+                                    String nameSpaceStr = parser.getName() +  "." + strKey;
+                                    if(viewParser.supportNameSpace(nameSpaceStr)){
+                                    	nameSpaceKey = nameSpaceStr.hashCode();
                                     }
+
+                                    key = mStringStore.getStringId(strKey, false);
                                     if (key != 0) {
                                         String value = parser.getAttributeValue(i);
-                                        boolean result = convertAttribute(name, parser, attrItem, parentParser, viewParser, key, strKey, value,
+                                        boolean result = convertAttribute(name, parser, attrItem, parentParser, viewParser,nameSpaceKey, key, strKey, value,
                                                 intDatas, intAPDatas, floatDatas, floatAPDatas, strDatas, codeDatas);
                                         if (!result) {
                                             break;
@@ -520,7 +521,7 @@ public class ViewCompiler implements ExprCompiler.Listener {
                                                 AlertView.alert("custom key error:" + strKey);
                                             }
                                             String value = parser.getAttributeValue(i);
-                                            boolean result = convertAttribute(name, parser, attrItem, parentParser, viewParser, key2, strKey, value,
+                                            boolean result = convertAttribute(name, parser, attrItem, parentParser, viewParser,nameSpaceKey, key2, strKey, value,
                                                     intDatas, intAPDatas, floatDatas, floatAPDatas, strDatas, codeDatas);
                                             if (!result) {
                                                 break;
@@ -717,7 +718,9 @@ public class ViewCompiler implements ExprCompiler.Listener {
         return ret;
     }
 
-    private boolean convertAttribute(String name, XmlPullParser parser, Parser.AttrItem attrItem, Parser parentParser, Parser viewParser, int key, String strKey, String value,
+    private boolean convertAttribute(String name, XmlPullParser parser, 
+    		Parser.AttrItem attrItem, Parser parentParser, 
+    		Parser viewParser,int nameSpaceKey, int key, String strKey, String value,
                                      Map<Integer, Integer> intDatas,
                                      Map<Integer, Integer> intAPDatas,
                                      Map<Integer, Float> floatDatas,
@@ -728,7 +731,12 @@ public class ViewCompiler implements ExprCompiler.Listener {
         int id = 0;
         attrItem.setStr(value);
         // this and parent convert attribute, layout
-        int convertResult = viewParser.convertAttribute(key, attrItem);
+        int convertResult = 0;
+        if(nameSpaceKey==0){
+        	convertResult = viewParser.convertAttribute(key, attrItem);
+        }else{
+        	convertResult = viewParser.convertAttribute(nameSpaceKey, key, attrItem);
+        }
         if (convertResult == -1) {
             AlertView.alert("FileName= " + name + " VALUE ERROR:key=" + strKey + " value=" + attrItem.mStrValue);
         }
