@@ -32,6 +32,7 @@
   - 配置 xml 节点 id
   - 如配置 `VIEW_ID_FrameLayout=1`，则 xml 节点中的 `<FrameLayout>` 在编译后会用数值1代替
   - 节点配置以 **`VIEW_ID_`** 开头
+  - **自定义控件 id 从 1000 开始分配，前面 1000 保留给系统使用**
 - `property=ValueType`
   - 配置属性值的类型，配置对所有模板生效，不支持在 1.xml 和 2.xml 中对相同的属性用不同的 ValueType 解析
   - 目前已经支持
