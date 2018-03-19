@@ -106,8 +106,6 @@
                 layoutWidth="match_parent"
                 layoutHeight="250"
                 borderRadius="8"
-                borderWidth="2"
-                borderColor="#FF0000"
     >
         <NText
                 layoutWidth="150"
