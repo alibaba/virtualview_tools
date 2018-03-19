@@ -72,16 +72,16 @@
                 color="#8888FF" />
 
         <NFrameLayout
-                flag="flag_clickable"
+                flag="flag_clickable|flag_exposure"
                 action="nframelayout1"
+
                 layoutWidth="150"
                 layoutHeight="150"
                 background="#0088FF"
                 layoutGravity="right"
-                textSize="12"
                 gravity="v_center|h_center"
                 borderColor="#FF0000"
-                borderWidth="10"
+                borderWidth="${width}"
                 borderRadius="8">
                 <NImage
                         src="https://img.alicdn.com/imgextra/i3/1910146537/TB2Vqm9X1IPyuJjSspcXXXiApXa_!!1910146537.jpg"
