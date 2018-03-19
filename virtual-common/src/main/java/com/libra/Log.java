@@ -71,6 +71,7 @@ public class Log {
      * @param tag Used to identify the source of a log message.  It usually identifies
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
+     * @return 0.
      */
     public static int v(String tag, String msg) {
         return println(LOG_ID_MAIN, VERBOSE, tag, msg);
@@ -82,6 +83,7 @@ public class Log {
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
      * @param tr An exception to log
+     * @return 0.
      */
     public static int v(String tag, String msg, Throwable tr) {
         return println(LOG_ID_MAIN, VERBOSE, tag, msg + '\n' + getStackTraceString(tr));
@@ -92,6 +94,7 @@ public class Log {
      * @param tag Used to identify the source of a log message.  It usually identifies
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
+     * @return 0.
      */
     public static int d(String tag, String msg) {
         return println(LOG_ID_MAIN, DEBUG, tag, msg);
@@ -103,6 +106,7 @@ public class Log {
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
      * @param tr An exception to log
+     * @return 0.
      */
     public static int d(String tag, String msg, Throwable tr) {
         return println(LOG_ID_MAIN, DEBUG, tag, msg + '\n' + getStackTraceString(tr));
@@ -113,6 +117,7 @@ public class Log {
      * @param tag Used to identify the source of a log message.  It usually identifies
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
+     * @return 0.
      */
     public static int i(String tag, String msg) {
         return println(LOG_ID_MAIN, INFO, tag, msg);
@@ -124,6 +129,7 @@ public class Log {
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
      * @param tr An exception to log
+     * @return 0.
      */
     public static int i(String tag, String msg, Throwable tr) {
         return println(LOG_ID_MAIN, INFO, tag, msg + '\n' + getStackTraceString(tr));
@@ -134,6 +140,7 @@ public class Log {
      * @param tag Used to identify the source of a log message.  It usually identifies
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
+     * @return 0.
      */
     public static int w(String tag, String msg) {
         return println(LOG_ID_MAIN, WARN, tag, msg);
@@ -145,16 +152,18 @@ public class Log {
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
      * @param tr An exception to log
+     * @return 0.
      */
     public static int w(String tag, String msg, Throwable tr) {
         return println(LOG_ID_MAIN, WARN, tag, msg + '\n' + getStackTraceString(tr));
     }
 
-    /*
+    /**
      * Send a {@link #WARN} log message and log the exception.
      * @param tag Used to identify the source of a log message.  It usually identifies
      *        the class or activity where the log call occurs.
      * @param tr An exception to log
+     * @return 0.
      */
     public static int w(String tag, Throwable tr) {
         return println(LOG_ID_MAIN, WARN, tag, getStackTraceString(tr));
@@ -165,6 +174,7 @@ public class Log {
      * @param tag Used to identify the source of a log message.  It usually identifies
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
+     * @return 0.
      */
     public static int e(String tag, String msg) {
         return println(LOG_ID_MAIN, ERROR, tag, msg);
@@ -176,6 +186,7 @@ public class Log {
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
      * @param tr An exception to log
+     * @return 0.
      */
     public static int e(String tag, String msg, Throwable tr) {
         return println(LOG_ID_MAIN, ERROR, tag, msg + '\n' + getStackTraceString(tr));
@@ -184,6 +195,7 @@ public class Log {
     /**
      * Handy function to get a loggable stack trace from a Throwable
      * @param tr An exception to log
+     * @return throwable string.
      */
     public static String getStackTraceString(Throwable tr) {
         if (tr == null) {
@@ -214,18 +226,19 @@ public class Log {
      *        the class or activity where the log call occurs.
      * @param msg The message you would like logged.
      * @return The number of bytes written.
+     * @return 0.
      */
     public static int println(int priority, String tag, String msg) {
         return println(LOG_ID_MAIN, priority, tag, msg);
     }
 
-    /** @hide */ public static final int LOG_ID_MAIN = 0;
-    /** @hide */ public static final int LOG_ID_RADIO = 1;
-    /** @hide */ public static final int LOG_ID_EVENTS = 2;
-    /** @hide */ public static final int LOG_ID_SYSTEM = 3;
-    /** @hide */ public static final int LOG_ID_CRASH = 4;
+    public static final int LOG_ID_MAIN = 0;
+    public static final int LOG_ID_RADIO = 1;
+    public static final int LOG_ID_EVENTS = 2;
+    public static final int LOG_ID_SYSTEM = 3;
+    public static final int LOG_ID_CRASH = 4;
 
-    /** @hide */ @SuppressWarnings("unused")
+    @SuppressWarnings("unused")
     public static int println(int bufID,
                               int priority, String tag, String msg) {
 //        System.out.printf("bufId: %d, priority: %d, TAG: %s, msg: %s\n", bufID, priority, tag, msg);

@@ -36,7 +36,7 @@ if (project.hasProperty("android")) { // Android libraries
 //    task javadoc(type: Javadoc) {
 //        source = android.sourceSets.main.java.srcDirs
 //        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-
+//
 //        android.libraryVariants.all { variant ->
 //            println variant.javaCompile.classpath.files
 //            if(variant.name == 'release') { //我们只需 release 的 javadoc
@@ -69,15 +69,16 @@ if (project.hasProperty("android")) { // Android libraries
         classifier = 'sources'
         from sourceSets.main.allSource
     }
+
 }
 
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
 
 artifacts {
-//    archives javadocJar
+    archives javadocJar
     archives sourcesJar
 }
 
@@ -106,6 +107,14 @@ bintray {
                 passphrase = properties.getProperty("bintray.gpg.password")
                 //Optional. The passphrase for GPG signing'
             }
+
+            mavenCentralSync {
+                sync = true
+                user = properties.getProperty('bintray.oss.user')
+                password = properties.getProperty('bintray.oss.password')
+                close = '1'
+            }
+
         }
     }
 }

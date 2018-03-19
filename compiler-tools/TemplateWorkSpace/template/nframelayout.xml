@@ -81,7 +81,7 @@
                 layoutGravity="right"
                 gravity="v_center|h_center"
                 borderColor="#FF0000"
-                borderWidth="${width}"
+                borderWidth="6"
                 borderRadius="8">
                 <NImage
                         src="https://img.alicdn.com/imgextra/i3/1910146537/TB2Vqm9X1IPyuJjSspcXXXiApXa_!!1910146537.jpg"
