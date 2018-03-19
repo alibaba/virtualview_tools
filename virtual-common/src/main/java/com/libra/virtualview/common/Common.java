@@ -81,6 +81,12 @@ public class Common {
 
     public final static int VIEW_ID_Var = 24;
 
+    public final static int VIEW_ID_NFrameLayout = 25;
+    public final static int VIEW_ID_NGridLayout = 26;
+    public final static int VIEW_ID_NRatioLayout = 27;
+    public final static int VIEW_ID_NVH2Layout = 28;
+    public final static int VIEW_ID_NVHLayout = 29;
+
     // only parse integer
     public static boolean parseInteger(DataItem value) {
         boolean ret = false;
