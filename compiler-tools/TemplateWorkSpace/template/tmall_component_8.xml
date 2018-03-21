@@ -96,6 +96,7 @@
     <VHLayout
             layoutWidth="match_parent"
             layoutHeight="wrap_content"
+            visibility="@{${switch} ? visible : invisible }"
             paddingTop="8"
             paddingBottom="8"
             background="#ECE5D3"

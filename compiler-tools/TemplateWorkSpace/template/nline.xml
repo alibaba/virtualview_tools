@@ -42,6 +42,7 @@
             layoutHeight="20"
     >
         <NLine
+                background="#FF0000"
                 layoutWidth="match_parent"
                 layoutHeight="wrap_content"
                 layoutGravity="v_center"

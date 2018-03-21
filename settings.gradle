@@ -40,6 +40,6 @@ include 'api'
 include 'services:webservice'
 */
 
-include 'virtual-common', 'compiler', 'compiler-tools'
+include 'virtual-common', 'virtual-compiler', 'compiler-tools'
 
 rootProject.name = 'virtualview_tools'

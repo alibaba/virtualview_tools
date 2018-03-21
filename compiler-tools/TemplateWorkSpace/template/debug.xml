@@ -23,20 +23,75 @@
   ~ SOFTWARE.
   -->
 
-<FrameLayout
+<VHLayout
         flag="flag_exposure|flag_clickable"
+        orientation="V"
         action="LTLoopViewAction"
         layoutWidth="match_parent"
-        layoutHeight="200rp"
-        background="#ffffff">
+        layoutHeight="wrap_content"
+        background="#ff0000">
 
 
     <NImage
             layoutWidth="match_parent"
-            layoutHeight="match_parent"
+            layoutHeight="250rp"
             layoutGravity="h_center|v_center"
             src="https://img.alicdn.com/imgextra/i3/1910146537/TB2Vqm9X1IPyuJjSspcXXXiApXa_!!1910146537.jpg"
             scaleType="center_crop"
     />
 
-</FrameLayout>
+        <NFrameLayout
+                flag="flag_clickable"
+                action="nframelayout0"
+                layoutWidth="match_parent"
+                layoutHeight="200"
+                background="#88ff00"
+                borderRadius="8"
+                borderWidth="4"
+                visibility="invisible"
+    >
+        <VGraph
+                layoutWidth="wrap_content"
+                layoutHeight="wrap_content"
+                diameterX="150"
+                diameterY="150"
+                type="circle"
+                color="#0000FF" />
+
+        <VGraph
+                layoutWidth="wrap_content"
+                layoutHeight="wrap_content"
+                diameterX="100"
+                diameterY="100"
+                type="circle"
+                color="#0088FF" />
+
+        <VGraph
+                layoutWidth="wrap_content"
+                layoutHeight="wrap_content"
+                diameterX="50"
+                diameterY="50"
+                type="circle"
+                color="#8888FF" />
+
+        <NFrameLayout
+                flag="flag_clickable|flag_exposure"
+                action="nframelayout1"
+
+                layoutWidth="150"
+                layoutHeight="150"
+                background="#0088FF"
+                layoutGravity="right"
+                gravity="v_center|h_center"
+                borderColor="#FF0000"
+                borderWidth="6"
+                borderRadius="8">
+                <NImage
+                        src="https://img.alicdn.com/imgextra/i3/1910146537/TB2Vqm9X1IPyuJjSspcXXXiApXa_!!1910146537.jpg"
+                        scaleType="center_crop"
+                        layoutWidth="match_parent"
+                        layoutHeight="match_parent" />
+        </NFrameLayout>
+
+    </NFrameLayout>
+</VHLayout>

@@ -23,7 +23,7 @@
   ~ SOFTWARE.
   -->
 
-<VHLayout
+<NVHLayout
         flag="flag_exposure|flag_clickable"
         orientation="V"
         layoutWidth="match_parent"
@@ -45,7 +45,7 @@
                 background="#88ff00"
                 borderRadius="8"
                 borderWidth="4"
-        
+                visibility="visible"
     >
         <VGraph
                 layoutWidth="wrap_content"
@@ -106,6 +106,7 @@
                 layoutWidth="match_parent"
                 layoutHeight="250"
                 borderRadius="8"
+                visibility="visible"
     >
         <NText
                 layoutWidth="150"
@@ -156,4 +157,4 @@
                 text="center" />
     </NFrameLayout>
 
-</VHLayout>
+</NVHLayout>

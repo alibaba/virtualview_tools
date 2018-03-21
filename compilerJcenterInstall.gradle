@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.github.dcendents.android-maven'
 
 group = GROUP
 

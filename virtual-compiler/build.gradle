@@ -76,7 +76,7 @@ dependencies {
 File deployConfig = rootProject.file('deploy_compiler.gradle')
 if (deployConfig.exists()) {
     apply from: rootProject.file('deploy_compiler.gradle')
-} else {
+} /*else {*/
     deployConfig = rootProject.file('compilerJcenterDeploy.gradle')
     if (deployConfig.exists()) {
         apply from: rootProject.file('compilerJcenterDeploy.gradle')
@@ -87,5 +87,5 @@ if (deployConfig.exists()) {
         apply from: rootProject.file('compilerJcenterInstall.gradle')
     }
 
-}
+//}
 
