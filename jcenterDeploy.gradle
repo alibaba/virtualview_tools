@@ -32,44 +32,11 @@ if (project.hasProperty("android")) { // Android libraries
         classifier = 'sources'
         from android.sourceSets.main.java.srcDirs
     }
-
-//    task javadoc(type: Javadoc) {
-//        source = android.sourceSets.main.java.srcDirs
-//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//
-//        android.libraryVariants.all { variant ->
-//            println variant.javaCompile.classpath.files
-//            if(variant.name == 'release') { //我们只需 release 的 javadoc
-//                task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
-//                    // title = ''
-//                    // description = ''
-//                    source = variant.javaCompile.source
-//                    classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
-//                    options {
-//                        encoding "utf-8"
-//                        links "http://docs.oracle.com/javase/7/docs/api/"
-//                        linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
-//                    }
-//                    exclude '**/BuildConfig.java'
-//                    exclude '**/R.java'
-//                }
-//                task("javadoc${variant.name.capitalize()}Jar", type: Jar, dependsOn: "generate${variant.name.capitalize()}Javadoc") {
-//                    classifier = 'javadoc'
-//                    from tasks.getByName("generate${variant.name.capitalize()}Javadoc").destinationDir
-//                }
-//                artifacts {
-//                    archives tasks.getByName("javadoc${variant.name.capitalize()}Jar")
-//                }
-//            }
-//        }
-//
-//    }
 } else { // Java libraries
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
         from sourceSets.main.allSource
     }
-
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {

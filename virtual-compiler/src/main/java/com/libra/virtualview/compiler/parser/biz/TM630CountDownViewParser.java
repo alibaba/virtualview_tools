@@ -35,7 +35,6 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
  * Created by longerian on 17/4/8.
  *
  * @author longerian
- * @date 2017/04/08
  */
 
 public class TM630CountDownViewParser extends ViewBaseParser {
