@@ -27,3 +27,5 @@ local.properties
 #compilerJcenterInstall.gradle
 
 deploy_compiler.gradle
+debug.xml
+test.xml
