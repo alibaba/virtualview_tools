@@ -32,7 +32,7 @@ import com.libra.virtualview.compiler.parser.Parser;
 /**
  * Created by jiangbin.jiangb on 2017/4/24.
  */
-
+@Deprecated
 public class TMPriceTextViewParser extends NativeTextParser {
 
     private final static String TAG = "TMPriceText_TMTEST";

@@ -36,7 +36,7 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
  *
  * @author longerian
  */
-
+@Deprecated
 public class TMTipsViewParser extends ViewBaseParser {
 
     private final static String TAG = "TMTipsViewParser_TMTEST";

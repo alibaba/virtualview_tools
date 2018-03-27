@@ -32,6 +32,7 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
 /**
  * Created by mikeafc on 2017/8/19.
  */
+@Deprecated
 public class TM830TabHeaderViewParser extends ViewBaseParser {
 
     public static class Builder implements IBuilder {

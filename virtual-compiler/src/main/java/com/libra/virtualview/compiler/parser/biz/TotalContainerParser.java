@@ -35,7 +35,7 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
  *
  * @author longerian
  */
-
+@Deprecated
 public class TotalContainerParser extends ViewBaseParser {
 
     private final static String TAG = "TotalContainerParser_TMTEST";

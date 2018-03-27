@@ -34,7 +34,7 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
 /**
  * Created by jiangbin.jiangb on 2017/4/24.
  */
-
+@Deprecated
 public class TMRecommendTextViewParser extends NativeTextParser {
 
     private final static String TAG = "TMRecommendText_TMTEST";

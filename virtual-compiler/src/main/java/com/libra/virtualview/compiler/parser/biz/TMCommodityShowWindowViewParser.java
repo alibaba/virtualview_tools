@@ -34,7 +34,7 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
 /**
  * Created by jiangbin.jiangb on 2017/5/19.
  */
-
+@Deprecated
 public class TMCommodityShowWindowViewParser extends ViewBaseParser {
     private final static String TAG = "TMShowWindowParser_TMTEST";
 

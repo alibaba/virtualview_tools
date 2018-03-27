@@ -33,7 +33,7 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
 /**
  * Created by jiangbin.jiangb on 2017/5/16.
  */
-
+@Deprecated
 public class TMCommodityScenceViewParser extends ViewBaseParser {
 
     private final static String TAG = "TMCommodityParser_TMTEST";

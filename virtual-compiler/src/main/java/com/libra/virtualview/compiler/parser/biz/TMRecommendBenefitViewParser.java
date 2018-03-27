@@ -34,7 +34,7 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
  * Created by jiangbin.jiangb on 2017/5/9.
  */
 
-
+@Deprecated
 public class TMRecommendBenefitViewParser extends ViewBaseParser {
 
     private final static String TAG = "TMTipsViewParser_TMTEST";

@@ -36,7 +36,7 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
  *
  * @author longerian
  */
-
+@Deprecated
 public class TM630CountDownViewParser extends ViewBaseParser {
 
     private final static String TAG = "TM630CountDownView_TMTEST";

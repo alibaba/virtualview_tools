@@ -33,6 +33,7 @@ import com.libra.virtualview.compiler.parser.ViewBaseParser;
 /**
  * Created by mikeafc on 2017/7/18.
  */
+@Deprecated
 public class TM630RecommendMagicWandViewParser extends ViewBaseParser {
     private int magicWandNormalId;
 

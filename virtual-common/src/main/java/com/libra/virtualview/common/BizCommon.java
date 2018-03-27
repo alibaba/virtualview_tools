@@ -27,6 +27,7 @@ package com.libra.virtualview.common;
 /**
  * Created by longerian on 2017/5/20.
  */
+@Deprecated
 public class BizCommon {
 
     public static final int SCROLL_VIEW = Common.USER_VIEW_ID_START + 1;
