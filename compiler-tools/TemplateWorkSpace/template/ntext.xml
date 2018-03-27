@@ -327,12 +327,37 @@
             supportHTMLStyle="true"
             layoutWidth="match_parent"
             layoutHeight="wrap_content" />
-	<NText
-			text="bindTextStyle"
-			textSize="12"
-			textColor="#333333"
-			layoutWidth="match_parent"
-			layoutHeight="wrap_content"
-			textStyle="${style.text-style}"
-			/>
+
+    <NText
+            text="Title: lineHeight = 30 with pure text"
+            textSize="12"
+            textColor="#333333"
+            background="#008899"
+            layoutWidth="match_parent"
+            layoutHeight="20" />
+
+    <NText
+            text="(alway center in vertically, layoutHeight should be wrap_content)"
+            textSize="12"
+            textColor="#333333"
+            lineHeight="30"
+            layoutWidth="match_parent"
+            layoutHeight="wrap_content" />
+
+    <NText
+            text="Title: lineHeight = 30 with rich text"
+            textSize="12"
+            textColor="#333333"
+            background="#008899"
+            layoutWidth="match_parent"
+            layoutHeight="20" />
+
+    <NText
+            text="rich text: <font color=#00bbaa>Lorem ipsum...</font>"
+            textSize="12"
+            textColor="#333333"
+            lineHeight="30"
+            supportHTMLStyle="true"
+            layoutWidth="match_parent"
+            layoutHeight="wrap_content" />
 </VHLayout>
