@@ -47,6 +47,8 @@ public class TextStyleValueParser extends BaseValueParser {
                     value |= TextBaseCommon.ITALIC;
                 } else if (TextUtils.equals("strike", str)) {
                     value |= TextBaseCommon.STRIKE;
+                } else if (TextUtils.equals("underline", str)) {
+                    value |= TextBaseCommon.UNDERLINE;
                 } else {
                     Log.e(TAG, "invalidate value:" + str);
                     ret = false;
