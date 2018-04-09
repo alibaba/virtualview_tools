@@ -30,6 +30,7 @@ import com.libra.expr.common.StringSupport;
 import com.libra.virtualview.common.StringBase;
 import com.libra.virtualview.compiler.alert.Assert;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -95,7 +96,12 @@ public class StringStore extends StringBase implements StringSupport {
             while (iterator.hasNext()) {
                 String string = iterator.next();
                 int index = mSingleOutputString2Index.get(string);
-                byte[] bs = string.getBytes();
+                byte[] bs = new byte[0];
+                try {
+                    bs = string.getBytes("UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 file.writeInt(index);
                 file.writeShort(bs.length);
                 file.write(bs);
