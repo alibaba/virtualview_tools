@@ -64,6 +64,8 @@ public class ColorValueParser extends BaseValueParser {
                     value = Color.TRANSPARENT;
                 } else if (TextUtils.equals("yellow", str)) {
                     value = Color.YELLOW;
+                } else if (TextUtils.equals("white", str)) {
+                    value = Color.WHITE;
                 } else {
                     value = Color.parseColor(str);
                 }
