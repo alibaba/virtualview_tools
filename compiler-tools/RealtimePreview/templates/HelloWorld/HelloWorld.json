@@ -1,0 +1,8 @@
+{
+    "text": "Hello World!",
+    "items": [
+              {"info": {"textColor": "false"}},
+              {"subItems": [{"info": {"textColor": "#00ff00"}}]},
+              {"subItems": [{"info": {"textColor": "#ff0000"}}]}
+    ]
+}

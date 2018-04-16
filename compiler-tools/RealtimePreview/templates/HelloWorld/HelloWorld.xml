@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VHLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../vv.xsd"
+          orientation="V"
+          layoutWidth="match_parent"
+          layoutHeight="200"
+          background="#11000000">
+
+  <NText text="${text}"
+         textSize="40"
+         textColor="@{${items[0].info.textColor} ? ${items[1].subItems[0].info.textColor} : ${items[2].subItems[0].info.textColor}}"
+         background="#fffff0"
+         layoutWidth="match_parent"
+         layoutHeight="200"
+         gravity="h_center|v_center" />
+
+</VHLayout>

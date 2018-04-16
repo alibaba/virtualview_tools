@@ -1,0 +1,33 @@
+{
+    "templates": [
+        "QUxJVlYAAQAAWdsAAAAvAAAAkAAAAL8AAAD1AAABuAAAAAAAAAG8AAAAAAABAAAAAAABAApIZWxsb1dvcmxkAH4AAAIEqjL10AAAAABc1fDxAAAAyLCYVS4RAAAAd3CsvP////8AAAACfREwBNF35jvOOvRwYx6r5gAAAAAHBcQtOs4AAAAoXNXw8QAAAMiwmFUu////8BC4ck4AAAAkd3CsvP////8AAAACADZFLUjWynnAmy42tiGl5gAAAQEAAAAGfREwBAAdeHNpOm5vTmFtZXNwYWNlU2NoZW1hTG9jYXRpb262IaXmAG9AeyR7aXRlbXNbMF0uaW5mby50ZXh0Q29sb3J9ID8gJHtpdGVtc1sxXS5zdWJJdGVtc1swXS5pbmZvLnRleHRDb2xvcn0gOiAke2l0ZW1zWzJdLnN1Ykl0ZW1zWzBdLmluZm8udGV4dENvbG9yfX1jHqvmAClodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZc469HAACXhtbG5zOnhzadF35jsADC4uLy4uL3Z2LnhzZEjWynkAByR7dGV4dH0AAAAA"
+    ], 
+    "data": {
+        "text": "Hello World!", 
+        "items": [
+            {
+                "info": {
+                    "textColor": "false"
+                }
+            }, 
+            {
+                "subItems": [
+                    {
+                        "info": {
+                            "textColor": "#00ff00"
+                        }
+                    }
+                ]
+            }, 
+            {
+                "subItems": [
+                    {
+                        "info": {
+                            "textColor": "#ff0000"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
