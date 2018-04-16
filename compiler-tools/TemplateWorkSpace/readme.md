@@ -1,3 +1,5 @@
+# 即将废弃，升级到 2.0 版本开发工具：[RealtimePreview](https://github.com/alibaba/virtualview_tools/tree/master/compiler-tools/RealtimePreview)
+
 ### 使用说明
 
 #### 独立运行模式
