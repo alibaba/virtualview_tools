@@ -84,6 +84,9 @@ public class Utils {
             return false;
         }
         int length = value.length();
+        if (length <= 3) {
+            return false;
+        }
         return (value.charAt(0) == '$' && value.charAt(1) == '{' && value.charAt(length - 1) == '}')
                 || (value.charAt(0) == '@' && value.charAt(1) == '{' && value.charAt(length - 1) == '}');
     }
