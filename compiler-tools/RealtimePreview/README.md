@@ -22,6 +22,7 @@
 ├── compiler.jar   (VV 的编译工具)
 ├── config.properties   (VV 编译模版需要的描述文件)
 ├── run.sh    (主运行脚本)
+├── .dir (目录配置，json数组格式，新增模板目录需要在此配置，并重新运行脚本)
 └── templates (按文件夹分割存放模版)
     └── helloworld
         ├── helloworld.json   (该模版所需参数)
