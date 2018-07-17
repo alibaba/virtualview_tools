@@ -9,6 +9,7 @@
 .idea/workspace.xml
 .idea/modules.xml
 .gradle/
+.idea/
 *.out.xml
 virtual-common/bin/
 virtual-common/build/
@@ -19,6 +20,7 @@ compiler-tools/build1/
 compiler-tools/template/build/
 compiler-tools/template/*.txt
 compiler-tools/compiler-tools/
+compiler-tools/build/
 local.properties
 
 #jcenterDeploy.gradle
