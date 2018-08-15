@@ -33,6 +33,7 @@ import com.libra.virtualview.compiler.alert.Assert;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.libra.virtualview.common.Common.MAX_PAGE_ITEM_COUNT;
@@ -43,17 +44,17 @@ import static com.libra.virtualview.common.Common.MAX_PAGE_ITEM_COUNT;
 public class StringStore extends StringBase implements StringSupport {
     final private static String TAG = "StringStore_TMTEST";
 
-    private Map<String, Integer> mSysString2Index = new HashMap<>();
+    private Map<String, Integer> mSysString2Index = new LinkedHashMap<>();
 
-    private Map<Integer, String> mSysIndex2Sys = new HashMap<>();
+    private Map<Integer, String> mSysIndex2Sys = new LinkedHashMap<>();
 
-    private Map<String, Integer> mString2Index = new HashMap<>();
+    private Map<String, Integer> mString2Index = new LinkedHashMap<>();
 
-    private Map<Integer, String> mIndex2String = new HashMap<>();
+    private Map<Integer, String> mIndex2String = new LinkedHashMap<>();
 
-    private Map<String, Integer> mSingleOutputString2Index = new HashMap();
+    private Map<String, Integer> mSingleOutputString2Index = new LinkedHashMap();
 
-    private Map<Integer, String> mSingleOutputIndex2String = new HashMap();
+    private Map<Integer, String> mSingleOutputIndex2String = new LinkedHashMap();
 
     private int mOffset;
 
@@ -142,7 +143,7 @@ public class StringStore extends StringBase implements StringSupport {
                 
                 Assert.check(!(mIndex2String.containsKey(ret) && !str.equals(mIndex2String.get(ret))),
                         "hash code conflicts, see string " + str);
-                
+
                 mString2Index.put(str, ret);
                 mIndex2String.put(ret, str);
                 mSingleOutputString2Index.put(str, ret);
